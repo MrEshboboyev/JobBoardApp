@@ -11,7 +11,9 @@ namespace JobBoardApp.Application.Mappings
             #region UserProfile
             CreateMap<UserProfile, UserProfileDTO>()
                 .ForMember(dest => dest.OwnerName, opt => opt.MapFrom(src => src.User.UserName))
-                .ReverseMap();
+                .ReverseMap()
+                    .ForMember(dest => dest.UserId, opt => opt.Ignore())
+                    .ForMember(dest => dest.User, opt => opt.Ignore());
             #endregion
         }
     }
