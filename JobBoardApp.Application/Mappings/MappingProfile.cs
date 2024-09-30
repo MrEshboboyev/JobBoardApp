@@ -1,11 +1,6 @@
 ﻿using AutoMapper;
 using JobBoardApp.Application.DTOs;
 using JobBoardApp.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JobBoardApp.Application.Mappings
 {
@@ -13,6 +8,11 @@ namespace JobBoardApp.Application.Mappings
     {
         public MappingProfile()
         {
+            #region UserProfile
+            CreateMap<UserProfile, UserProfileDTO>()
+                .ForMember(dest => dest.OwnerName, opt => opt.MapFrom(src => src.User.UserName))
+                .ReverseMap();
+            #endregion
         }
     }
 }
