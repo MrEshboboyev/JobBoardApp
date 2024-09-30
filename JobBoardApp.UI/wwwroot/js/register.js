@@ -12,6 +12,24 @@
         }
     }
 
+    // Utility function to validate email format (basic regex for email validation)
+    function validateEmailFormat(email) {
+        var emailPattern = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+        return emailPattern.test(email);
+    }
+
+    // Debounce function to limit how often a function is called
+    function debounce(func, delay) {
+        var timer;
+        return function () {
+            var context = this, args = arguments;
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+                func.apply(context, args);
+            }, delay);
+        };
+    }
+
     // Role selection event handler
     $('#Role').change(function () {
         var role = $(this).val();
@@ -30,56 +48,72 @@
         validateFormFields();
     });
 
-    // AJAX Email uniqueness check
-    $('#Email').blur(function () {
+    // AJAX Email uniqueness check (with validation and debounce)
+    $('#Email').blur(debounce(function () {
         var email = $(this).val();
-        $.ajax({
-            url: '/Account/CheckEmail', // Endpoint to check email
-            type: 'GET',
-            data: { email: email },
-            success: function (response) {
-                if (response.exists) {
-                    alert("Email already exists!");
-                    $('#Email').addClass('is-invalid');
+
+        // Only proceed if the email is not empty and is valid
+        if (email.length > 0 && validateEmailFormat(email)) {
+            $.ajax({
+                url: '/Account/CheckEmail', // Endpoint to check email
+                type: 'GET',
+                data: { email: email },
+                success: function (response) {
+                    if (response.exists) {
+                        alert("Email already exists!");
+                        $('#Email').addClass('is-invalid');
+                        emailValid = false;
+                    } else {
+                        $('#Email').removeClass('is-invalid');
+                        emailValid = true;
+                    }
+                    checkFormValidity(); // Check if the form is valid after email validation
+                },
+                error: function () {
+                    console.log("Error checking email.");
                     emailValid = false;
-                } else {
-                    $('#Email').removeClass('is-invalid');
-                    emailValid = true;
+                    checkFormValidity();
                 }
-                checkFormValidity(); // Check if the form is valid after email validation
-            },
-            error: function () {
-                console.log("Error checking email.");
-                emailValid = false;
-                checkFormValidity();
-            }
-        });
-    });
+            });
+        } else {
+            $('#Email').addClass('is-invalid');
+            emailValid = false;
+            checkFormValidity();
+        }
+    }, 5000)); // 500ms delay before checking email
 
     // AJAX Username uniqueness check
     $('#UserName').blur(function () {
         var username = $(this).val();
-        $.ajax({
-            url: '/Account/CheckUsername', // Endpoint to check username
-            type: 'GET',
-            data: { username: username },
-            success: function (response) {
-                if (response.exists) {
-                    alert("Username already exists!");
-                    $('#UserName').addClass('is-invalid');
+
+        // Only check if the username is not empty
+        if (username.length > 0) {
+            $.ajax({
+                url: '/Account/CheckUsername', // Endpoint to check username
+                type: 'GET',
+                data: { username: username },
+                success: function (response) {
+                    if (response.exists) {
+                        alert("Username already exists!");
+                        $('#UserName').addClass('is-invalid');
+                        usernameValid = false;
+                    } else {
+                        $('#UserName').removeClass('is-invalid');
+                        usernameValid = true;
+                    }
+                    checkFormValidity(); // Check if the form is valid after username validation
+                },
+                error: function () {
+                    console.log("Error checking username.");
                     usernameValid = false;
-                } else {
-                    $('#UserName').removeClass('is-invalid');
-                    usernameValid = true;
+                    checkFormValidity();
                 }
-                checkFormValidity(); // Check if the form is valid after username validation
-            },
-            error: function () {
-                console.log("Error checking username.");
-                usernameValid = false;
-                checkFormValidity();
-            }
-        });
+            });
+        } else {
+            $('#UserName').addClass('is-invalid');
+            usernameValid = false;
+            checkFormValidity();
+        }
     });
 
     // Other form fields validation
