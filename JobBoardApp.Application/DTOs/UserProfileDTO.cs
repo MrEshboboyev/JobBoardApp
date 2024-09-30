@@ -9,6 +9,6 @@
         public string? Website { get; set; } 
         public string? Bio { get; set; } 
 
-        public string OwnerName { get; set; }
+        public string? OwnerName { get; set; }
     }
 }

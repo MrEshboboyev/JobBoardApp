@@ -16,7 +16,8 @@ namespace JobBoardApp.Infrastructure.Implementations
             try
             {
                 var profile = await _unitOfWork.UserProfile.GetAsync(
-                    userProfile => userProfile.UserId.Equals(userId)
+                    filter: userProfile => userProfile.UserId.Equals(userId),
+                    includeProperties: "User"
                     ) ?? throw new Exception("Profile not found!");
 
                 var mappedProfile = _mapper.Map<UserProfileDTO>(profile);
@@ -44,8 +45,6 @@ namespace JobBoardApp.Infrastructure.Implementations
                 // update
                 await _unitOfWork.UserProfile.UpdateAsync(profile);
                 await _unitOfWork.SaveAsync();
-
-                var mappedProfile = _mapper.Map<UserProfileDTO>(profile);
 
                 return new ResponseDTO<bool>(true);
             }
