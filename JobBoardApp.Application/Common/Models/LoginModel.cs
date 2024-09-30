@@ -1,8 +1,13 @@
-﻿namespace JobBoardApp.Application.Common.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace JobBoardApp.Application.Common.Models
 {
     public class LoginModel
     {
-        public string Email { get; set; }
+        [Required]
+        public string UserName { get; set; }
+        [Required]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
     }
 }

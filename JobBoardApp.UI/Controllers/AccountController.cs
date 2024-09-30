@@ -31,6 +31,34 @@ namespace JobBoardApp.UI.Controllers
             return View();
         }
 
+
+        #region Checking uniqueness methods (Email,UserName)
+        [HttpGet]
+        public async Task<IActionResult> CheckEmail(string email)
+        {
+            var emailExist = await _authService.EmailExist(email);
+            if (emailExist.Data)
+            {
+                return Json(new { exists = true });
+            }
+
+            return Json(new { exists = false });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CheckUsername(string username)
+        {
+            var usernameExist = await _authService.UserNameExist(username);
+            if (usernameExist.Data)
+            {
+                return Json(new { exists = true });
+            }
+
+            return Json(new { exists = false });
+        }
+        #endregion
+
+
         [HttpPost]
         public async Task<IActionResult> Register(RegisterModel model)
         {
@@ -43,10 +71,12 @@ namespace JobBoardApp.UI.Controllers
             RegisterModel registerModel = new()
             {
                 Email = model.Email,
+                UserName = model.UserName,
                 Password = model.Password,
-                DateOfBirth = model.DateOfBirth,
-                ProfilePictureUrl = model.ProfilePictureUrl,
-                Website = model.Website
+                Role = model.Role,
+                Bio = model.Bio,
+                Website = model.Website,
+                CompanyName = model.CompanyName,
             };
 
             var result = await _authService.RegisterAsync(registerModel);

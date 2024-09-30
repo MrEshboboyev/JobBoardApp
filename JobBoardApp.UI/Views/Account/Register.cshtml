@@ -6,30 +6,75 @@
 
 <h2>Register</h2>
 
-<form asp-action="Register" method="post">
+<form asp-action="Register" method="post" id="registerForm">
     <div class="row">
-        <div class="col-12 col-md-6 offset-md-3 pb-2">
-            <input asp-for="Email" class="form-control" placeholder="Email..." />
+        <!-- Email -->
+        <div class="col-12 col-md-6 pb-2">
+            <input asp-for="Email" class="form-control" placeholder="Email..." id="Email" />
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
-        <div class="col-12 col-md-6 offset-md-3 pb-2">
+        <!-- UserName -->
+        <div class="col-12 col-md-6 pb-2">
+            <input asp-for="UserName" class="form-control" placeholder="Username..." id="UserName" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Password -->
+        <div class="col-12 col-md-6 pb-2">
             <input asp-for="Password" class="form-control" placeholder="Password..." />
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
-        <div class="col-12 col-md-6 offset-md-3 pb-2">
+        <!-- Confirm Password -->
+        <div class="col-12 col-md-6 pb-2">
             <input asp-for="ConfirmPassword" class="form-control" placeholder="Confirm Password..." />
             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
         </div>
-        <div class="col-12 col-md-6 offset-md-3 pb-2">
+    </div>
+
+    <div class="row">
+        <!-- Role Selection -->
+        <div class="col-12 col-md-6 pb-2">
+            <select asp-for="Role" class="form-control" id="Role">
+                <option value="">Select Role...</option>
+                <option value="Employer">Employer</option>
+                <option value="JobSeeker">Job Seeker</option>
+            </select>
+            <span asp-validation-for="Role" class="text-danger"></span>
+        </div>
+    </div>
+
+    <!-- Conditional Fields based on Role -->
+    <div class="row" id="EmployerFields" style="display:none;">
+        <!-- Company Name (Employer) -->
+        <div class="col-12 col-md-6 pb-2">
+            <input asp-for="CompanyName" class="form-control" placeholder="Company Name..." />
+            <span asp-validation-for="CompanyName" class="text-danger"></span>
+        </div>
+        <!-- Website (Employer) -->
+        <div class="col-12 col-md-6 pb-2">
             <input asp-for="Website" class="form-control" placeholder="Website..." />
             <span asp-validation-for="Website" class="text-danger"></span>
         </div>
-        <div class="col-12 col-md-6 offset-md-3 pb-2">
-            <input asp-for="DateOfBirth" class="form-control" placeholder="Date Of Birth..." />
-            <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+    </div>
+
+    <div class="row">
+        <!-- Bio (Job Seeker or Employer) -->
+        <div class="col-12 col-md-6 pb-2" id="BioField" style="display:none;">
+            <textarea asp-for="Bio" class="form-control" placeholder="Bio..."></textarea>
+            <span asp-validation-for="Bio" class="text-danger"></span>
         </div>
-        <div class="col-12 col-md-6 offset-md-3 pb-2">
-            <button type="submit" class="form-control btn btn-success" value="Submit">Register</button>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-md-6 pb-2">
+            <!-- Initially disable the Register button -->
+            <button type="submit" class="form-control btn btn-success" id="registerButton" disabled>Register</button>
         </div>
     </div>
 </form>
+
+@section Scripts {
+    <script src="~/js/register.js"></script>
+}

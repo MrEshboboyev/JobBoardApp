@@ -57,14 +57,17 @@ namespace JobBoardApp.Infrastructure.Data
             // Timestamps using CURRENT_TIMESTAMP
             modelBuilder.Entity<AppUser>()
                 .Property(u => u.DateRegistered)
+                .HasColumnType("timestamp")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             modelBuilder.Entity<JobListing>()
                 .Property(jl => jl.PostedDate)
+                .HasColumnType("timestamp")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             modelBuilder.Entity<JobApplication>()
                 .Property(ja => ja.ApplicationDate)
+                .HasColumnType("timestamp")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
         }
     }

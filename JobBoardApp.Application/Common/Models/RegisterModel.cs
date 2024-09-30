@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using JobBoardApp.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace JobBoardApp.Application.Common.Models
 {
@@ -7,6 +8,9 @@ namespace JobBoardApp.Application.Common.Models
         [Required]
         [EmailAddress]
         public string Email { get; set; }
+
+        [Required]
+        public string UserName { get; set; }
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
@@ -15,12 +19,11 @@ namespace JobBoardApp.Application.Common.Models
         [Compare(nameof(Password), ErrorMessage = "Password and confirm password must be match.")]
         public string ConfirmPassword { get; set; }
 
-        // User Profile fields
-        [DataType(DataType.ImageUrl)]
-        public string ProfilePictureUrl { get; set; } = string.Empty; // URL of the profile picture
-        public string Website { get; set; } = string.Empty;       // User's personal website or blog
         [Required]
-        [DataType(DataType.Date)]
-        public DateTime DateOfBirth { get; set; }  // Optional date of birth
+        public UserRole Role { get; set; }
+
+        public string? Bio { get; set; }
+        public string? CompanyName { get; set; } // Used for employers
+        public string? Website { get; set; } // Used for employers
     }
 }

@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using JobBoardApp.Application.Common.Interfaces;
 using JobBoardApp.Application.Common.Models;
-using JobBoardApp.Application.Common.Utility;
 using JobBoardApp.Application.DTOs;
 using JobBoardApp.Application.Services.Interfaces;
 using JobBoardApp.Domain.Entities;
@@ -73,14 +72,14 @@ namespace JobBoardApp.Infrastructure.Implementations
         {
             try
             {
-                var result = await _signInManager.PasswordSignInAsync(loginModel.Email,
+                var result = await _signInManager.PasswordSignInAsync(loginModel.UserName,
                     loginModel.Password, false, false);
 
                 if (!result.Succeeded)
                     return new ResponseDTO<string>("Email/Password is incorrect!");
 
                 // getting this user and user roles
-                var userFromDb = await _userManager.FindByEmailAsync(loginModel.Email)
+                var userFromDb = await _userManager.FindByNameAsync(loginModel.UserName)
                     ?? throw new Exception("User not found in our system!");
 
                 var userRoles = await _userManager.GetRolesAsync(userFromDb);
@@ -100,27 +99,81 @@ namespace JobBoardApp.Infrastructure.Implementations
         {
             try
             {
+                var emailExist = await EmailExist(registerModel.Email);
+                var usernameExist = await UserNameExist(registerModel.UserName);
+
+                if (emailExist.Data || usernameExist.Data)
+                    return new ResponseDTO<string>("Username/email already exist!");
+
                 // create new AppUser instance
                 AppUser user = new()
                 {
                     Email = registerModel.Email,
-                    UserName = registerModel.Email
+                    UserName = registerModel.UserName,
+                    DateRegistered = DateTime.Now 
                 };
 
+                
                 // create and added to db user
                 var result = await _userManager.CreateAsync(user, registerModel.Password);
 
                 if(!result.Succeeded)
                     return new ResponseDTO<string>($"Error : {result.Errors.FirstOrDefault()!.Description}");
 
+                // create user profile
+                UserProfile userProfile = new()
+                {
+                    Bio = registerModel.Bio,
+                    CompanyName = registerModel.CompanyName,
+                    Website = registerModel.Website,
+                    UserId = user.Id
+                };
+
+                await _unitOfWork.UserProfile.AddAsync(userProfile);
+                await _unitOfWork.SaveAsync();
+
                 // assign role
-                await _userManager.AddToRoleAsync(user, "");
+                await _userManager.AddToRoleAsync(user, registerModel.Role.ToString());
 
                 return new ResponseDTO<string>(null, "Registration successful!");
             }
             catch (Exception ex)
             {
                 return new ResponseDTO<string>(ex.Message);
+            }
+        }
+
+        public async Task<ResponseDTO<bool>> EmailExist(string email)
+        {
+            try
+            {
+                var userExist = await _userManager.FindByEmailAsync(email);
+
+                if (userExist is null)
+                    return new ResponseDTO<bool>(false);
+
+                return new ResponseDTO<bool>(true);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO<bool>(ex.Message);
+            }
+        }
+
+        public async Task<ResponseDTO<bool>> UserNameExist(string username)
+        {
+            try
+            {
+                var userExist = await _userManager.FindByNameAsync(username);
+
+                if (userExist is null)
+                    return new ResponseDTO<bool>(false);
+
+                return new ResponseDTO<bool>(true);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO<bool>(ex.Message);
             }
         }
     }

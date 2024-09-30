@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using JobBoardApp.Application.Common.Interfaces;
 using JobBoardApp.Application.Common.Utility;
 using JobBoardApp.Domain.Entities;
+using JobBoardApp.Domain.Enums;
 
 namespace JobBoardApp.Infrastructure.Data
 {
@@ -30,6 +31,8 @@ namespace JobBoardApp.Infrastructure.Data
                 {
                     // creating roles
                     _roleManager.CreateAsync(new IdentityRole(SD.Role_Architect)).Wait();
+                    _roleManager.CreateAsync(new IdentityRole(UserRole.Employer.ToString())).Wait();
+                    _roleManager.CreateAsync(new IdentityRole(UserRole.JobSeeker.ToString())).Wait();
 
                     // create admin user
                     _userManager.CreateAsync(new AppUser
