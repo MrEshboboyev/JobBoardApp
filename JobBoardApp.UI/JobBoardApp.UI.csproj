@@ -20,4 +20,9 @@
 		<ProjectReference Include="..\JobBoardApp.Infrastructure\JobBoardApp.Infrastructure.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Areas\Employer\Data\" />
+	  <Folder Include="Areas\Employer\Models\" />
+	</ItemGroup>
+
 </Project>

@@ -17,6 +17,7 @@ namespace JobBoardApp.Infrastructure.Configurations
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserProfileService, UserProfileService>();
+            services.AddScoped<IJobListingService, JobListingService>();
 
             return services;
         }

@@ -51,6 +51,11 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+app.MapAreaControllerRoute(
+    name: "MyAreaEmployer",
+    areaName: "Employer",
+    pattern: "Employer/{controller=JobListing}/{action=Index}");
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
