@@ -23,6 +23,15 @@ namespace JobBoardApp.Application.Mappings
                     .ForMember(dest => dest.Employer, opt => opt.Ignore())
                     .ForMember(dest => dest.PostedDate, opt => opt.Ignore());
             #endregion
+
+            #region JobApplication
+            CreateMap<JobApplication, JobApplicationDTO>()
+                .ForMember(dest => dest.JobSeekerName, opt => opt.MapFrom(src => src.JobSeeker.UserName))
+                .ReverseMap()
+                    .ForMember(dest => dest.JobSeeker, opt => opt.Ignore())
+                    .ForMember(dest => dest.JobListing, opt => opt.Ignore())
+                    .ForMember(dest => dest.ApplicationDate, opt => opt.Ignore());
+            #endregion
         }
     }
 }
