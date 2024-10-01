@@ -6,6 +6,7 @@ namespace JobBoardApp.Application.Services.Interfaces
     {
         Task<ResponseDTO<IEnumerable<JobListingDTO>>> GetAllJobListingsAsync();
         Task<ResponseDTO<IEnumerable<JobListingDTO>>> GetEmployerJobListingsAsync(string employerId);
+        Task<ResponseDTO<JobListingDTO>> GetJobListingAsync(Guid jobListingId);
         Task<ResponseDTO<bool>> CreateJobListingAsync(JobListingDTO jobListingDTO);
         Task<ResponseDTO<bool>> UpdateJobListingAsync(JobListingDTO jobListingDTO);
         Task<ResponseDTO<bool>> DeleteJobListingAsync(JobListingDTO jobListingDTO);

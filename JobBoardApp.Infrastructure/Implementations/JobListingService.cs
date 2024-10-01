@@ -46,6 +46,27 @@ namespace JobBoardApp.Infrastructure.Implementations
             }
         }
 
+        public async Task<ResponseDTO<JobListingDTO>> GetJobListingAsync(Guid jobListingId)
+        {
+            try
+            {
+                var jobListing = await _unitOfWork.JobListing.GetAsync(
+                    filter: jl => jl.Id.Equals(jobListingId),
+                    includeProperties: "Employer");
+
+                var mappedJobListing = _mapper.Map<JobListingDTO>(jobListing);
+
+                return new ResponseDTO<JobListingDTO>(mappedJobListing);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO<JobListingDTO>(ex.Message);
+            }
+        }
+
+
+
+
         public async Task<ResponseDTO<bool>> CreateJobListingAsync(JobListingDTO jobListingDTO)
         {
             try

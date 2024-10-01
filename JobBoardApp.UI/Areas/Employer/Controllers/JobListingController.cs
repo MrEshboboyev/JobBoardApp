@@ -43,5 +43,30 @@ namespace JobBoardApp.UI.Areas.Employer.Controllers
             TempData["error"] = $"Failed to Job Listing creation process. Error : {result.Message}";
             return View(jobListingDTO);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Update(Guid jobListingId)
+        {
+            var jobListing = (await _jobListingService.GetJobListingAsync(jobListingId)).Data;
+
+            return View(jobListing);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(JobListingDTO jobListingDTO)
+        {
+            jobListingDTO.EmployerId = GetUserId();
+
+            var result = await _jobListingService.UpdateJobListingAsync(jobListingDTO);
+
+            if (result.Success)
+            {
+                TempData["success"] = "Job listing updated successfully";
+                return RedirectToAction(nameof(EmployerIndex));
+            }
+
+            TempData["error"] = $"Failed to Job Listing updated process. Error : {result.Message}";
+            return View(jobListingDTO);
+        }
     }
 }
