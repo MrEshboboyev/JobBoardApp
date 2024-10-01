@@ -1,4 +1,5 @@
-﻿using JobBoardApp.Application.Services.Interfaces;
+﻿using JobBoardApp.Application.DTOs;
+using JobBoardApp.Application.Services.Interfaces;
 using JobBoardApp.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,26 @@ namespace JobBoardApp.UI.Areas.Employer.Controllers
         {
             var allJobListings = (await _jobListingService.GetAllJobListingsAsync()).Data;
             return View(allJobListings);
+        }
+
+        [HttpGet]
+        public IActionResult Create() => View();
+
+        [HttpPost]
+        public async Task<IActionResult> Create(JobListingDTO jobListingDTO)
+        {
+            jobListingDTO.EmployerId = GetUserId();
+
+            var result = await _jobListingService.CreateJobListingAsync(jobListingDTO);
+
+            if (result.Success)
+            {
+                TempData["success"] = "Job Listing created successfully!";
+                return RedirectToAction(nameof(UserIndex));
+            }
+
+            TempData["error"] = $"Failed to Job Listing creation process. Error : {result.Message}";
+            return View(jobListingDTO);
         }
     }
 }
