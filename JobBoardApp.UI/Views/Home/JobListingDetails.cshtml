@@ -1,0 +1,61 @@
+﻿@model JobListingDTO
+
+@{
+    ViewData["Title"] = "Job Details";
+    var userRole = User.IsInRole("JobSeeker") ? "JobSeeker" : (User.IsInRole("Employer") ? "Employer" : "");
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-body">
+                    <!-- Job Title -->
+                    <h2 class="card-title text-primary">@Model.Title</h2>
+
+                    <!-- Job Details -->
+                    <div class="mb-3">
+                        <p class="card-text"><strong>Description:</strong> @Model.Description</p>
+                        <p class="card-text"><strong>Location:</strong> @Model.Location</p>
+                        <p class="card-text"><strong>Salary:</strong> @Model.SalaryRange.ToString("C")</p>
+                        <p class="card-text"><strong>Job Type:</strong> @Model.JobType</p>
+
+                        @if (Model.IsActive)
+                        {
+                            <span class="badge bg-success"><i class="bi bi-check-circle"></i> Active</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger"><i class="bi bi-x-circle"></i> Inactive</span>
+                        }
+                    </div>
+
+                    <!-- Conditional Buttons based on Role -->
+                    <div class="d-flex justify-content-end">
+                        @if (userRole == "JobSeeker")
+                        {
+                            @if (Model.IsActive)
+                            {
+                                <a href="@Url.Action("Apply", "JobApplications", new { id = Model.Id })" class="btn btn-primary me-2">
+                                    <i class="bi bi-send"></i> Apply
+                                </a>
+                            }
+                            else
+                            {
+                                <!-- Blurred "Apply" Button -->
+                                <button class="btn btn-primary me-2" disabled style="opacity: 0.5; cursor: not-allowed;">
+                                    <i class="bi bi-send"></i> Apply (Inactive Job)
+                                </button>
+                            }
+                        }
+
+                        <!-- "Back To Jobs" Button -->
+                        <a asp-action="Index" class="btn btn-secondary">
+                            <i class="bi bi-arrow-left"></i> Back To Jobs
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

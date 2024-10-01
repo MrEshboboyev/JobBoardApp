@@ -1,5 +1,6 @@
 using JobBoardApp.Application.Services.Interfaces;
 using JobBoardApp.UI.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -13,6 +14,13 @@ namespace JobBoardApp.UI.Controllers
         {
             var allJobListings = (await _jobListingService.GetAllJobListingsAsync()).Data;
             return View(allJobListings);
+        }
+
+        [Authorize]
+        public async Task<IActionResult> JobListingDetails(Guid jobListingId)
+        {
+            var jobListing = (await _jobListingService.GetJobListingAsync(jobListingId)).Data;
+            return View(jobListing);
         }
 
         public IActionResult Privacy()

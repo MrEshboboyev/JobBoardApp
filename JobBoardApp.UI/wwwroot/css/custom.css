@@ -1,10 +1,13 @@
-﻿/* Styles for card elements */
+﻿/* Darker background for all cards */
 .card {
     border-radius: 15px;
+    background-color: #2c3e50; /* Darker background */
+    border: none;
 }
 
 .card-title {
     font-weight: bold;
+    color: #f1c40f; /* Adjusted color for better contrast on dark background */
 }
 
 .card-body {
@@ -26,11 +29,10 @@
         transform: scale(1.05);
     }
 
-/* Job Listing Card Styling with Blur Effect */
+/* Job Listing Card Styling with reduced blur and darker background */
 .job-listing-card {
-    backdrop-filter: blur(10px);
     border-radius: 15px;
-    background: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+    background-color: rgba(44, 62, 80, 0.9); /* Darker background for job listing cards */
     transition: transform 0.2s ease-in-out;
 }
 
@@ -38,6 +40,12 @@
         transform: scale(1.05);
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
     }
+
+/* Apply reduced blur and opacity for inactive job listings */
+.inactive-job {
+    filter: blur(1px); /* Reduced blur */
+    opacity: 0.8; /* Slightly more visible */
+}
 
 /* Form focus styling */
 .form-label {
@@ -70,7 +78,7 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    background-color: #343a40;
+    background-color: #2c3e50;
     overflow-x: hidden;
     padding-top: 20px;
     transition: width 0.3s;
@@ -98,4 +106,5 @@ body {
 .navbar-brand {
     font-weight: bold;
     font-size: 24px;
+    color: #ffffff;
 }

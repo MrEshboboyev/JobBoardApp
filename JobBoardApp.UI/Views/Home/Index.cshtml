@@ -2,17 +2,19 @@
 
 @{
     ViewData["Title"] = "Job Listings";
+    // Sorting: Active listings at the top, inactive at the bottom
+    var sortedJobs = Model.OrderByDescending(job => job.IsActive).ToList();
 }
 
 <div class="container py-5">
     <h2 class="text-center mb-5">Available Job Listings</h2>
 
     <div class="row justify-content-center">
-        @foreach (var job in Model)
+        @foreach (var job in sortedJobs)
         {
             <div class="col-md-6 mb-4">
-                <!-- Job Listing Card with Blur Effect -->
-                <div class="card shadow-lg border-0 job-listing-card">
+                <!-- Job Listing Card with Blur Effect for inactive jobs -->
+                <div class="card shadow-lg border-0 job-listing-card @(!job.IsActive ? "inactive-job" : "")">
                     <div class="card-body p-4">
                         <!-- Job Title -->
                         <h4 class="card-title text-primary">@job.Title</h4>
@@ -33,7 +35,6 @@
                             {
                                 @job.Description
                             }
-
                         </p>
 
                         <!-- Job Location, Salary, and Job Type -->
@@ -45,7 +46,7 @@
 
                         <!-- Action Button -->
                         <div class="text-center mt-3">
-                            <a asp-action="Details" asp-route-jobId="@job.Id" class="btn btn-primary px-4">
+                            <a asp-action="JobListingDetails" asp-route-jobListingId="@job.Id" class="btn btn-primary px-4">
                                 <i class="bi bi-info-circle"></i> View Details
                             </a>
                         </div>
