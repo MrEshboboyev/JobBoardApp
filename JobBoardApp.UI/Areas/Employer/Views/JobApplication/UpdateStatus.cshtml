@@ -1,0 +1,58 @@
+﻿@model JobApplicationDTO
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <h2 class="card-title text-center">@Model.JobListing.Title</h2>
+                    <h5 class="text-center text-muted">Application from @Model.JobSeekerName</h5>
+
+                    <div class="mt-4">
+                        <h6 class="font-weight-bold">Resume:</h6>
+                        <p>@Model.Resume</p>
+                    </div>
+                    <div class="mt-3">
+                        <h6 class="font-weight-bold">Cover Letter:</h6>
+                        <p>@Model.CoverLetter</p>
+                    </div>
+                    <div class="mt-3">
+                        <h6 class="font-weight-bold">Application Date:</h6>
+                        <p>@Model.ApplicationDate.ToString("MMMM dd, yyyy")</p>
+                    </div>
+
+                    <!-- Action Buttons: Accept/Reject -->
+                    <div class="d-flex justify-content-between mt-4">
+                        <form method="post" asp-action="AcceptApplication" asp-route-id="@Model.Id" class="w-45">
+                            <button type="submit" class="btn btn-success btn-block">Accept</button>
+                        </form>
+                        <form method="post" asp-action="RejectApplication" asp-route-id="@Model.Id" class="w-45">
+                            <button type="submit" class="btn btn-danger btn-block">Reject</button>
+                        </form>
+                    </div>
+
+                    <!-- Back to Manage Applications -->
+                    <div class="mt-5 text-center">
+                        <a href="@Url.Action("ManageApplications", "Employer")" class="btn btn-secondary">Back to Manage Applications</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Optional: Additional Bootstrap 5 styling for consistent UI -->
+<style>
+    .card {
+        border: none;
+        border-radius: 15px;
+    }
+
+    .btn-block {
+        width: 100%;
+    }
+
+    .w-45 {
+        width: 45%;
+    }
+</style>

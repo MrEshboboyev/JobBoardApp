@@ -52,6 +52,25 @@ namespace JobBoardApp.Infrastructure.Implementations
             }
         }
 
+        public async Task<ResponseDTO<JobApplicationDTO>> GetApplicationAsync(Guid applicationId)
+        {
+            try
+            {
+                var jobApplication = await _unitOfWork.JobApplication.GetAsync(
+                    filter: ja => ja.Id.Equals(applicationId),
+                    includeProperties: "JobSeeker,JobListing,JobListing.Employer"
+                    ) ?? throw new Exception("Job Application not found!");
+
+                var mappedJobApplication = _mapper.Map<JobApplicationDTO>(jobApplication);
+
+                return new ResponseDTO<JobApplicationDTO>(mappedJobApplication);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO<JobApplicationDTO>(ex.Message);
+            }
+        }
+
         public async Task<ResponseDTO<bool>> CreateJobApplicationAsync(JobApplicationDTO jobApplicationDTO)
         {
             try

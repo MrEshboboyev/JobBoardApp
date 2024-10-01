@@ -93,7 +93,7 @@
                                             </span>
                                         </td>
                                         <td>
-                                            <a href="@Url.Action("EditApplicationStatus", new { id = application.Id })" class="btn btn-warning btn-sm">
+                                            <a asp-action="UpdateStatus" asp-route-applicationId="@application.Id" class="btn btn-warning btn-sm">
                                                 <i class="bi bi-pencil-square"></i> Update Status
                                             </a>
                                         </td>
