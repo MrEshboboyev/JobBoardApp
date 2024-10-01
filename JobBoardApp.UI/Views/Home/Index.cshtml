@@ -9,10 +9,26 @@
 <div class="container py-5">
     <h2 class="text-center mb-5">Available Job Listings</h2>
 
-    <div class="row justify-content-center">
+    <!-- Search Input -->
+    <div class="row justify-content-center mb-4">
+        <div class="col-md-8">
+            <input type="text" id="jobSearchInput" class="form-control" placeholder="Search job listings..." />
+        </div>
+    </div>
+
+    <!-- Job Listings -->
+    <div class="row justify-content-center" id="jobListingsContainer">
+        <div id="noResultsMessage" style="display: none;" class="text-center text-muted">
+            <p>No Matching Job Listing Found</p>
+        </div>
         @foreach (var job in sortedJobs)
         {
-            <div class="col-md-6 mb-4">
+            <div class="col-md-6 mb-4 job-listing"
+                 data-title="@job.Title"
+                 data-description="@job.Description"
+                 data-location="@job.Location"
+                 data-salary="@job.SalaryRange.ToString()"
+                 data-jobtype="@job.JobType.ToString()">
                 <!-- Job Listing Card with Blur Effect for inactive jobs -->
                 <div class="card shadow-lg border-0 job-listing-card @(!job.IsActive ? "inactive-job" : "")">
                     <div class="card-body p-4">
@@ -56,3 +72,8 @@
         }
     </div>
 </div>
+
+<!-- Include JavaScript for real-time search -->
+@section Scripts {
+    <script src="~/js/RealTimeSearch.js"></script>
+}
