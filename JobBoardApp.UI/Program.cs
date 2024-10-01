@@ -56,6 +56,11 @@ app.MapAreaControllerRoute(
     areaName: "Employer",
     pattern: "Employer/{controller=JobListing}/{action=Index}");
 
+app.MapAreaControllerRoute(
+    name: "MyAreaJobSeeker",
+    areaName: "JobSeeker",
+    pattern: "JobSeeker/{controller=JobApplication}/{action=Index}");
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

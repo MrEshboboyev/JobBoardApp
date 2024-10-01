@@ -1,0 +1,75 @@
+﻿@model IEnumerable<JobApplicationDTO>
+
+@{
+    ViewData["Title"] = "Job Applications";
+}
+
+<div class="container py-5">
+    <h2 class="text-center mb-5">Job Applications</h2>
+
+    <div class="row justify-content-center">
+        @foreach (var application in Model)
+        {
+            <div class="col-md-6 mb-4">
+                <!-- Job Application Card -->
+                <div class="card shadow-lg border-0">
+                    <div class="card-body p-4">
+                        <!-- Job Title and Application Date -->
+                        <div class="d-flex justify-content-between mb-3">
+                            <h4 class="card-title text-primary">
+                                <i class="bi bi-briefcase-fill"></i> @application.JobListing.Title
+                            </h4>
+                            <span class="text-muted">
+                                <i class="bi bi-calendar"></i> Applied on: @application.ApplicationDate.ToShortDateString()
+                            </span>
+                        </div>
+
+                        <!-- Job Seeker Name -->
+                        <p class="card-text">
+                            <strong>Applicant:</strong> @application.JobSeekerName
+                        </p>
+
+                        <!-- Resume and Cover Letter Links (Optional to Download or View) -->
+                        <p class="card-text">
+                            <strong>Resume:</strong> <a href="@application.Resume" target="_blank" class="text-info">View Resume</a>
+                            <br />
+                            <strong>Cover Letter:</strong> <a href="@application.CoverLetter" target="_blank" class="text-info">View Cover Letter</a>
+                        </p>
+
+                        <!-- Status Badge (Dynamic Color Based on Status) -->
+                        <div class="mb-3">
+                            @if (application.Status == ApplicationStatus.Accepted)
+                            {
+                                <span class="badge bg-success"><i class="bi bi-check-circle"></i> Accepted</span>
+                            }
+                            else if (application.Status == ApplicationStatus.Rejected)
+                            {
+                                <span class="badge bg-danger"><i class="bi bi-x-circle"></i> Rejected</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split"></i> Under Review</span>
+                            }
+                        </div>
+
+                        <!-- Job Listing Info -->
+                        <div class="mb-3">
+                            <strong>Job:</strong> @application.JobListing.Title
+                            <br />
+                            <strong>Location:</strong> @application.JobListing.Location
+                            <br />
+                            <strong>Salary:</strong> @application.JobListing.SalaryRange.ToString("C")
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="text-center">
+                            <a asp-action="JobApplicationDetails" asp-route-jobApplicationId="@application.Id" class="btn btn-primary px-4">
+                                <i class="bi bi-info-circle"></i> View Application Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

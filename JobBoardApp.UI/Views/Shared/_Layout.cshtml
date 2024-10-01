@@ -27,8 +27,10 @@
             <a asp-area="Employer" asp-controller="JobListing" asp-action="EmployerIndex"><i class="bi bi-card-list"></i> My Job Listings</a>
             <a asp-area="Employer" asp-controller="JobListing" asp-action="Create"><i class="bi bi-pencil-square"></i> Create Job Listing</a>
         }
-        <a asp-area="" asp-controller="Post" asp-action="LikedIndex"><i class="bi bi-hand-thumbs-up"></i> Liked Posts</a>
-        <a asp-area="" asp-controller="Post" asp-action="Create"><i class="bi bi-pencil-square"></i> Create Post</a>
+        @if (User.IsInRole("JobSeeker"))
+        {
+            <a asp-area="JobSeeker" asp-controller="JobApplication" asp-action="Index"><i class="bi bi-card-list"></i> My Job Applications</a>
+        }
     </div>
 
     <!-- Main Content -->

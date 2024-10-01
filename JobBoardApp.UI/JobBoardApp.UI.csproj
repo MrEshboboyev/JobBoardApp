@@ -23,6 +23,8 @@
 	<ItemGroup>
 	  <Folder Include="Areas\Employer\Data\" />
 	  <Folder Include="Areas\Employer\Models\" />
+	  <Folder Include="Areas\JobSeeker\Data\" />
+	  <Folder Include="Areas\JobSeeker\Models\" />
 	</ItemGroup>
 
 </Project>
