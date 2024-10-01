@@ -68,5 +68,26 @@ namespace JobBoardApp.UI.Areas.Employer.Controllers
             TempData["error"] = $"Failed to Job Listing updated process. Error : {result.Message}";
             return View(jobListingDTO);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid jobListingId)
+        {
+            JobListingDTO jobListingDTO = new()
+            {
+                Id = jobListingId,
+                EmployerId = GetUserId()
+            };
+
+            var result = await _jobListingService.DeleteJobListingAsync(jobListingDTO);
+
+            if (result.Success)
+            {
+                TempData["success"] = "Job Listing deleted successfully!";
+                return RedirectToAction(nameof(EmployerIndex));
+            }
+
+            TempData["error"] = $"Failed to job listing delete process. Error : {result.Message}";
+            return View(jobListingDTO);
+        }
     }
 }
