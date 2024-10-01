@@ -3,6 +3,7 @@ using JobBoardApp.Application.Common.Interfaces;
 using JobBoardApp.Application.DTOs;
 using JobBoardApp.Application.Services.Interfaces;
 using JobBoardApp.Domain.Entities;
+using JobBoardApp.Domain.Enums;
 
 namespace JobBoardApp.Infrastructure.Implementations
 {
@@ -56,7 +57,8 @@ namespace JobBoardApp.Infrastructure.Implementations
             try
             {
                 var jobApplicationForDb = _mapper.Map<JobApplication>(jobApplicationDTO);
-                jobApplicationDTO.ApplicationDate = DateTime.Now;
+                jobApplicationForDb.ApplicationDate = DateTime.Now;
+                jobApplicationForDb.Status = ApplicationStatus.Pending;
 
                 await _unitOfWork.JobApplication.AddAsync(jobApplicationForDb);
                 await _unitOfWork.SaveAsync();

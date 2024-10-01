@@ -38,5 +38,28 @@ namespace JobBoardApp.UI.Areas.JobSeeker.Controllers
 
             return View(jobApplicationVM);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Apply(JobApplicationVM jobApplicationVM)
+        {
+            JobApplicationDTO jobApplicationDTO = new()
+            {
+                JobSeekerId = GetUserId(),
+                JobListingId = jobApplicationVM.JobListingId,
+                Resume = jobApplicationVM.Resume,
+                CoverLetter = jobApplicationVM.CoverLetter
+            };
+
+            var result = await _jobApplicationService.CreateJobApplicationAsync(jobApplicationDTO);
+
+            if (result.Success)
+            {
+                TempData["success"] = "Job Application created successfully!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            TempData["error"] = $"Failed to Job Application create process. Error : {result.Message}";
+            return View(jobApplicationDTO);
+        }
     }
 }

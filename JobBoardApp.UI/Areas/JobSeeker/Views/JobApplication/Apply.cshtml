@@ -33,6 +33,7 @@
                 <div class="card-body">
                     <h3 class="card-title">Apply for this Job</h3>
                     <form asp-action="Apply" method="post">
+                        <input asp-for="JobListingId" hidden/>
                         <div class="mb-3">
                             <label for="resume" class="form-label">Resume (URL or File)</label>
                             <input type="text" class="form-control" id="resume" name="Resume" required placeholder="Enter resume link or upload file">
