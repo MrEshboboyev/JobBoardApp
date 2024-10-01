@@ -108,3 +108,43 @@ body {
     font-size: 24px;
     color: #ffffff;
 }
+
+
+/* Apply page-specific styling */
+.card-title {
+    color: #f39c12; /* Gold color for titles */
+}
+
+.card-body {
+    background-color: #34495e; /* Slightly darker background for form */
+    color: #ecf0f1;
+}
+
+/* Button submit hover effect */
+button[type="submit"] {
+    transition: all 0.3s ease;
+}
+
+    button[type="submit"]:hover {
+        transform: scale(1.05);
+        background-color: #27ae60;
+        border-color: #27ae60;
+    }
+
+/* Form input styling */
+.form-control {
+    background-color: #2c3e50;
+    color: #ecf0f1;
+    border: none;
+    border-radius: 5px;
+}
+
+    .form-control:focus {
+        border-color: #3498db;
+        box-shadow: 0 0 10px rgba(52, 152, 219, 0.5);
+    }
+
+/* Navbar spacing adjustment */
+body {
+    padding-top: 56px;
+}
