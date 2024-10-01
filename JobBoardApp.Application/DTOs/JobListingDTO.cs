@@ -1,4 +1,5 @@
-﻿using JobBoardApp.Domain.Enums;
+﻿using JobBoardApp.Domain.Entities;
+using JobBoardApp.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -26,5 +27,6 @@ namespace JobBoardApp.Application.DTOs
         public bool IsActive { get; set; }
 
         public string EmployerName { get; set; }
+        public List<JobApplicationDTO> Applications { get; set; }
     }
 }

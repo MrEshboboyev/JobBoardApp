@@ -34,7 +34,7 @@ namespace JobBoardApp.Infrastructure.Implementations
             {
                 var employerJobListings = await _unitOfWork.JobListing.GetAllAsync(
                     filter: jl => jl.EmployerId.Equals(employerId),
-                    includeProperties: "Employer");
+                    includeProperties: "Employer,Applications");
 
                 var mappedJobListings = _mapper.Map<IEnumerable<JobListingDTO>>(employerJobListings);
 
@@ -52,7 +52,7 @@ namespace JobBoardApp.Infrastructure.Implementations
             {
                 var jobListing = await _unitOfWork.JobListing.GetAsync(
                     filter: jl => jl.Id.Equals(jobListingId),
-                    includeProperties: "Employer");
+                    includeProperties: "Employer,Applications");
 
                 var mappedJobListing = _mapper.Map<JobListingDTO>(jobListing);
 

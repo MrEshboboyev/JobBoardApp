@@ -1,0 +1,109 @@
+﻿@model IEnumerable<JobListingDTO>
+
+@{
+    ViewData["Title"] = "Manage Applications";
+}
+
+<div class="container py-5">
+    <h2 class="text-center mb-5">Manage Job Applications</h2>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">
+            <strong>No job listings or applications available.</strong>
+        </div>
+    }
+    else
+    {
+        @foreach (var job in Model)
+        {
+            <div class="card mb-4 shadow-lg border-0">
+                <div class="card-body">
+                    <!-- Job Listing Information -->
+                    <h4 class="card-title text-primary">@job.Title</h4>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="text-muted"><i class="bi bi-geo-alt"></i> @job.Location</span>
+                        <span class="text-muted"><i class="bi bi-calendar"></i> Posted: @job.PostedDate.ToShortDateString()</span>
+                    </div>
+                    <p class="card-text mb-2">@job.Description</p>
+                    <div class="mb-3">
+                        <span class="badge bg-info text-dark"><i class="bi bi-currency-dollar"></i> @job.SalaryRange.ToString("C")</span>
+                        <span class="badge bg-success"><i class="bi bi-briefcase"></i> @job.JobType</span>
+                    </div>
+
+                    <!-- Job Applications -->
+                    <h5 class="mt-4">Applications for this Job</h5>
+                    @if (!job.Applications.Any())
+                    {
+                        <div class="alert alert-warning mt-3">No applications received for this job.</div>
+                    }
+                    else
+                    {
+                        <table class="table table-hover mt-3">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Applicant Name</th>
+                                    <th>Resume</th>
+                                    <th>Cover Letter</th>
+                                    <th>Application Date</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var application in job.Applications)
+                                {
+                                    <tr>
+                                        <td>@application.JobSeekerName</td>
+                                        <td>
+                                            <a href="@Url.Action("DownloadResume", new { id = application.Id })" class="btn btn-info btn-sm">
+                                                <i class="bi bi-download"></i> Resume
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#coverLetterModal_@application.Id">
+                                                <i class="bi bi-file-text"></i> View
+                                            </button>
+                                            <!-- Modal for Cover Letter -->
+                                            <div class="modal fade" id="coverLetterModal_@application.Id" tabindex="-1" aria-labelledby="coverLetterLabel" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="coverLetterLabel">Cover Letter</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <p>@application.CoverLetter</p>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>@application.ApplicationDate.ToShortDateString()</td>
+                                        <td>
+                                            <span class="badge
+                                                @(application.Status == ApplicationStatus.Accepted ? "bg-success" :
+                                                  application.Status == ApplicationStatus.Rejected ? "bg-danger" :
+                                                  application.Status == ApplicationStatus.Pending ? "bg-primary" :
+                                                  "bg-warning text-dark")">
+                                                @application.Status.ToString()
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("EditApplicationStatus", new { id = application.Id })" class="btn btn-warning btn-sm">
+                                                <i class="bi bi-pencil-square"></i> Update Status
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                </div>
+            </div>
+        }
+    }
+</div>

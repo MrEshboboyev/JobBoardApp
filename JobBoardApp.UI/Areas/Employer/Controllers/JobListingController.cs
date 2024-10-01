@@ -1,6 +1,5 @@
 ﻿using JobBoardApp.Application.DTOs;
 using JobBoardApp.Application.Services.Interfaces;
-using JobBoardApp.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
