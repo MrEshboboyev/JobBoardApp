@@ -1,0 +1,95 @@
+﻿@model JobApplicationDTO
+
+<div class="container py-5">
+    <!-- Application Details -->
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg mb-4">
+                <div class="card-body">
+                    <h3 class="card-title text-primary">Job Application Details</h3>
+
+                    <!-- Job Seeker Name -->
+                    <div class="mb-3">
+                        <label class="form-label">Job Seeker Name</label>
+                        <input type="text" class="form-control" readonly value="@Model.JobSeekerName">
+                    </div>
+
+                    <!-- Resume -->
+                    <div class="mb-3">
+                        <label class="form-label">Resume</label>
+                        <input type="text" class="form-control" readonly value="@Model.Resume">
+                    </div>
+
+                    <!-- Cover Letter -->
+                    <div class="mb-3">
+                        <label class="form-label">Cover Letter</label>
+                        <textarea class="form-control" readonly rows="4">@Model.CoverLetter</textarea>
+                    </div>
+
+                    <!-- Application Date -->
+                    <div class="mb-3">
+                        <label class="form-label">Application Date</label>
+                        <input type="text" class="form-control" readonly value="@Model.ApplicationDate.ToShortDateString()">
+                    </div>
+
+                    <!-- Application Status -->
+                    <div class="mb-3">
+                        <label class="form-label">Application Status</label>
+                        <input type="text" class="form-control" readonly value="@Model.Status">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Job Listing Details -->
+        <div class="col-md-8">
+            <div class="card shadow-lg mb-4">
+                <div class="card-body">
+                    <h3 class="card-title text-primary">Job Listing Details</h3>
+
+                    <!-- Job Title -->
+                    <div class="mb-3">
+                        <label class="form-label">Job Title</label>
+                        <input type="text" class="form-control" readonly value="@Model.JobListing.Title">
+                    </div>
+
+                    <!-- Job Description -->
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea class="form-control" readonly rows="4">@Model.JobListing.Description</textarea>
+                    </div>
+
+                    <!-- Job Location -->
+                    <div class="mb-3">
+                        <label class="form-label">Location</label>
+                        <input type="text" class="form-control" readonly value="@Model.JobListing.Location">
+                    </div>
+
+                    <!-- Salary Range -->
+                    <div class="mb-3">
+                        <label class="form-label">Salary Range</label>
+                        <input type="text" class="form-control" readonly value="@Model.JobListing.SalaryRange.ToString("C")">
+                    </div>
+
+                    <!-- Job Type -->
+                    <div class="mb-3">
+                        <label class="form-label">Job Type</label>
+                        <input type="text" class="form-control" readonly value="@Model.JobListing.JobType">
+                    </div>
+
+                    <!-- Posted Date -->
+                    <div class="mb-3">
+                        <label class="form-label">Posted Date</label>
+                        <input type="text" class="form-control" readonly value="@Model.JobListing.PostedDate.ToShortDateString()">
+                    </div>
+
+                    <!-- Employer Name -->
+                    <div class="mb-3">
+                        <label class="form-label">Employer Name</label>
+                        <input type="text" class="form-control" readonly value="@Model.JobListing.EmployerName">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -26,7 +26,7 @@ namespace JobBoardApp.UI.Controllers
             {
                 Bio = userProfile.Bio,
                 Email = User.FindFirstValue(ClaimTypes.Email),
-                UserName = User.FindFirstValue(ClaimTypes.Email),
+                UserName = userProfile.OwnerName,
                 Website = userProfile.Website,
                 CompanyName = userProfile.CompanyName,
                 Id = userProfile.Id,

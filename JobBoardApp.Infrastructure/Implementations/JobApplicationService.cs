@@ -38,8 +38,8 @@ namespace JobBoardApp.Infrastructure.Implementations
             {
                 var jobSeekerApplication = await _unitOfWork.JobApplication.GetAsync(
                     filter: ja => ja.JobSeekerId.Equals(jobApplicationDTO.JobSeekerId) && 
-                    ja.Id.Equals(jobApplicationDTO.JobListingId),
-                    includeProperties: "JobSeeker,JobListing"
+                    ja.Id.Equals(jobApplicationDTO.Id),
+                    includeProperties: "JobSeeker,JobListing,JobListing.Employer"
                     ) ?? throw new Exception("Job Application not found!");
 
                 var mapperJobApplication = _mapper.Map<JobApplicationDTO>(jobSeekerApplication);

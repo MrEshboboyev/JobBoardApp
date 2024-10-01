@@ -61,5 +61,24 @@ namespace JobBoardApp.UI.Areas.JobSeeker.Controllers
             TempData["error"] = $"Failed to Job Application create process. Error : {result.Message}";
             return View(jobApplicationDTO);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(Guid jobApplicationId)
+        {
+            JobApplicationDTO jobApplicationDTO = new()
+            {
+                Id = jobApplicationId,
+                JobSeekerId = GetUserId(),
+            };
+            var result = await _jobApplicationService.GetJobSeekerApplicationAsync(jobApplicationDTO);
+
+            if (!result.Success)
+            {
+                TempData["error"] = "Job Application not found!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(result.Data);
+        }
     }
 }
