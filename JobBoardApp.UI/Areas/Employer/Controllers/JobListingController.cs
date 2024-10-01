@@ -17,10 +17,10 @@ namespace JobBoardApp.UI.Areas.Employer.Controllers
         private string GetUserId() => User.FindFirstValue(ClaimTypes.NameIdentifier) 
             ?? throw new Exception("Login required!");
         #endregion
-
-        public async Task<IActionResult> Index()
+        
+        public async Task<IActionResult> EmployerIndex()
         {
-            var allJobListings = (await _jobListingService.GetAllJobListingsAsync()).Data;
+            var allJobListings = (await _jobListingService.GetEmployerJobListingsAsync(GetUserId())).Data;
             return View(allJobListings);
         }
 
@@ -37,7 +37,7 @@ namespace JobBoardApp.UI.Areas.Employer.Controllers
             if (result.Success)
             {
                 TempData["success"] = "Job Listing created successfully!";
-                return RedirectToAction(nameof(UserIndex));
+                return RedirectToAction(nameof(EmployerIndex));
             }
 
             TempData["error"] = $"Failed to Job Listing creation process. Error : {result.Message}";

@@ -1,21 +1,18 @@
+using JobBoardApp.Application.Services.Interfaces;
 using JobBoardApp.UI.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
 namespace JobBoardApp.UI.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController(IJobListingService jobListingService) : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IJobListingService _jobListingService = jobListingService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public async Task<IActionResult> Index()
         {
-            _logger = logger;
-        }
-
-        public IActionResult Index()
-        {
-            return View();
+            var allJobListings = (await _jobListingService.GetAllJobListingsAsync()).Data;
+            return View(allJobListings);
         }
 
         public IActionResult Privacy()

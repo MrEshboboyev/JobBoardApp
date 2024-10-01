@@ -1,0 +1,80 @@
+﻿@model IEnumerable<JobListingDTO>
+
+@{
+    ViewData["Title"] = "Manage Job Listings";
+}
+
+<div class="container py-5">
+    <h2 class="text-center mb-5">Manage Your Job Listings</h2>
+
+    <div class="row justify-content-center">
+        @if (Model.Any())
+        {
+            <div class="col-md-10">
+                <!-- Loop through each job listing -->
+                @foreach (var job in Model)
+                {
+                    <div class="card shadow-lg mb-4">
+                        <div class="card-body">
+                            <!-- Job Title and Active Status -->
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h4 class="card-title mb-0 text-primary">@job.Title</h4>
+                                <!-- IsActive Indicator -->
+                                @if (job.IsActive)
+                                {
+                                    <span class="badge bg-success"><i class="bi bi-check-circle"></i> Active</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-danger"><i class="bi bi-x-circle"></i> Inactive</span>
+                                }
+                            </div>
+
+                            <!-- Job Description -->
+                            <p class="card-text">
+                                @if (job.Description.Length > 100)
+                                {
+                                    @(job.Description.Substring(0, 100) + "...")
+                                }
+                                else
+                                {
+                                    @job.Description
+                                }
+                            </p>
+
+                            <!-- Job Details -->
+                            <div class="d-flex flex-wrap mb-3">
+                                <span class="badge bg-info text-dark me-2"><i class="bi bi-geo-alt"></i> @job.Location</span>
+                                <span class="badge bg-success me-2"><i class="bi bi-currency-dollar"></i> @job.SalaryRange.ToString("C")</span>
+                                <span class="badge bg-warning text-dark"><i class="bi bi-briefcase"></i> @job.JobType</span>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="d-flex justify-content-end">
+                                <a href="@Url.Action("Update", "JobListing", new { id = job.Id })" class="btn btn-outline-primary me-2">
+                                    <i class="bi bi-pencil-square"></i> Update
+                                </a>
+                                <form asp-action="Delete" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@job.Id" />
+                                    <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Are you sure you want to delete this job listing?');">
+                                        <i class="bi bi-trash"></i> Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <!-- No Job Listings -->
+            <div class="col-md-8 text-center">
+                <p class="text-muted">You haven't posted any job listings yet.</p>
+                <a href="@Url.Action("Create", "JobListing")" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Create Your First Job Listing
+                </a>
+            </div>
+        }
+    </div>
+</div>
