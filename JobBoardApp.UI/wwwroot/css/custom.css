@@ -152,3 +152,28 @@ button[type="submit"] {
 body {
     padding-top: 56px;
 }
+
+/* Notification card specific styles */
+.notification-card {
+    border-radius: 15px;
+    transition: all 0.3s ease;
+}
+
+    .notification-card.bg-light {
+        background-color: #f8f9fa; /* Light background for read notifications */
+    }
+
+/* Buttons */
+.btn-outline-dark {
+    transition: all 0.3s ease;
+}
+
+    .btn-outline-dark:hover {
+        background-color: #343a40;
+        color: #fff;
+    }
+
+/* Customize badge */
+.badge {
+    font-size: 0.85rem;
+}
