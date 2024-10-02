@@ -23,17 +23,24 @@
 
                     <!-- Action Buttons: Accept/Reject -->
                     <div class="d-flex justify-content-between mt-4">
-                        <form method="post" asp-action="AcceptApplication" asp-route-id="@Model.Id" class="w-45">
+                        <!-- Accept Button Form -->
+                        <form method="post" asp-action="UpdateStatus" class="w-45">
+                            <input type="hidden" name="applicationId" value="@Model.Id" />
+                            <input type="hidden" name="status" value="Accepted" />
                             <button type="submit" class="btn btn-success btn-block">Accept</button>
                         </form>
-                        <form method="post" asp-action="RejectApplication" asp-route-id="@Model.Id" class="w-45">
+
+                        <!-- Reject Button Form -->
+                        <form method="post" asp-action="UpdateStatus" class="w-45">
+                            <input type="hidden" name="applicationId" value="@Model.Id" />
+                            <input type="hidden" name="status" value="Rejected" />
                             <button type="submit" class="btn btn-danger btn-block">Reject</button>
                         </form>
                     </div>
 
                     <!-- Back to Manage Applications -->
                     <div class="mt-5 text-center">
-                        <a href="@Url.Action("ManageApplications", "Employer")" class="btn btn-secondary">Back to Manage Applications</a>
+                        <a asp-area="Employer" asp-action="ManageApplications" class="btn btn-secondary">Back to Manage Applications</a>
                     </div>
                 </div>
             </div>

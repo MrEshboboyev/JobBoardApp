@@ -33,7 +33,28 @@
                         <p class="card-text">
                             <strong>Resume:</strong> <a href="@application.Resume" target="_blank" class="text-info">View Resume</a>
                             <br />
-                            <strong>Cover Letter:</strong> <a href="@application.CoverLetter" target="_blank" class="text-info">View Cover Letter</a>
+                            <strong>Cover Letter:</strong> 
+                            <button class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#coverLetterModal_@application.Id">
+                                <i class="bi bi-file-text"></i> View 
+                            </button>
+                            <!-- Modal for Cover Letter -->
+                            <div class="modal fade" id="coverLetterModal_@application.Id" tabindex="-1" aria-labelledby="coverLetterLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="coverLetterLabel">Cover Letter</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>@application.CoverLetter</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                         </p>
 
                         <!-- Status Badge (Dynamic Color Based on Status) -->

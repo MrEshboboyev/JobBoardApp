@@ -93,9 +93,18 @@
                                             </span>
                                         </td>
                                         <td>
-                                            <a asp-action="UpdateStatus" asp-route-applicationId="@application.Id" class="btn btn-warning btn-sm">
-                                                <i class="bi bi-pencil-square"></i> Update Status
-                                            </a>
+                                            @if (application.Status == ApplicationStatus.Pending)
+                                            {
+                                                <a asp-action="UpdateStatus" asp-route-applicationId="@application.Id" class="btn btn-warning btn-sm">
+                                                    <i class="bi bi-pencil-square"></i> Update Status
+                                                </a>
+                                            }
+                                            else
+                                            {
+                                                <button class="btn btn-warning btn-sm disabled blurred" tabindex="-1" aria-disabled="true">
+                                                    <i class="bi bi-pencil-square"></i> Update Status
+                                                </button>
+                                            }
                                         </td>
                                     </tr>
                                 }
@@ -107,3 +116,15 @@
         }
     }
 </div>
+
+<!-- Custom CSS -->
+<style>
+    .disabled {
+        pointer-events: none;
+    }
+
+    .blurred {
+        filter: blur(2px);
+        opacity: 0.6;
+    }
+</style>

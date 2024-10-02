@@ -1,4 +1,6 @@
-﻿using JobBoardApp.Application.Services.Interfaces;
+﻿using JobBoardApp.Application.DTOs;
+using JobBoardApp.Application.Services.Interfaces;
+using JobBoardApp.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -29,6 +31,27 @@ namespace JobBoardApp.UI.Areas.Employer.Controllers
         {
             var application = (await _jobApplicationService.GetApplicationAsync(applicationId)).Data;
             return View(application);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateStatus(Guid applicationId, ApplicationStatus status)
+        {
+            JobApplicationDTO jobApplicationDTO = new()
+            {
+                Id = applicationId,
+                Status = status
+            };
+
+            var result = await _jobApplicationService.UpdateJobApplicationAsync(jobApplicationDTO);
+
+            if (result.Success)
+            {
+                TempData["success"] = "Applications Status updated!";
+                return RedirectToAction(nameof(ManageApplications));
+            }
+
+            TempData["error"] = $"Failed to Application update status process. Error : {result.Message}";
+            return View(jobApplicationDTO.Id);
         }
     }
 }

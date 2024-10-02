@@ -95,12 +95,10 @@ namespace JobBoardApp.Infrastructure.Implementations
             try
             {
                 var jobApplicationFromDb = await _unitOfWork.JobApplication.GetAsync(
-                    ja => ja.JobSeekerId.Equals(jobApplicationDTO.JobSeekerId) &&
-                    ja.Id.Equals(jobApplicationDTO.JobListingId)
+                    ja => ja.Id.Equals(jobApplicationDTO.Id)
                     ) ?? throw new Exception("Job Application not found!");
 
-                // mapping fields
-                _mapper.Map(jobApplicationDTO, jobApplicationFromDb);
+                jobApplicationFromDb.Status = jobApplicationDTO.Status;
 
                 await _unitOfWork.JobApplication.UpdateAsync(jobApplicationFromDb);
                 await _unitOfWork.SaveAsync();
