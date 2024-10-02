@@ -22,5 +22,7 @@ namespace JobBoardApp.Domain.Entities
 
         // Navigation property to job applications (if the user is a job seeker)
         public List<JobApplication> JobApplications { get; set; }
+
+        public ICollection<Notification> Notifications { get; set; } = [];
     }
 }

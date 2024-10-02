@@ -4,12 +4,13 @@ using JobBoardApp.Domain.Entities;
 
 namespace JobBoardApp.Infrastructure.Data
 {
-    public class AppDbContext(DbContextOptions<AppDbContext> options) : 
+    public class AppDbContext(DbContextOptions<AppDbContext> options) :
         IdentityDbContext<AppUser>(options)
     {
         public DbSet<UserProfile> UserProfiles { get; set; }
         public DbSet<JobListing> JobListings { get; set; }
         public DbSet<JobApplication> JobApplications { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -54,6 +55,23 @@ namespace JobBoardApp.Infrastructure.Data
             modelBuilder.Entity<JobApplication>()
                 .HasKey(ja => ja.Id);
 
+            // NOTIFICATION ENTITY
+            modelBuilder.Entity<Notification>()
+                .HasOne(n => n.Recipient)
+                .WithMany(u => u.Notifications)  // One AppUser can have many Notifications
+                .HasForeignKey(n => n.RecipientId);
+
+            modelBuilder.Entity<Notification>()
+                .HasOne(n => n.JobListing)
+                .WithMany()
+                .HasForeignKey(n => n.JobListingId);
+
+            modelBuilder.Entity<Notification>()
+                .HasOne(n => n.JobApplication)
+                .WithMany()
+                .HasForeignKey(n => n.JobApplicationId);
+
+
             // Timestamps using CURRENT_TIMESTAMP
             modelBuilder.Entity<AppUser>()
                 .Property(u => u.DateRegistered)
@@ -67,6 +85,11 @@ namespace JobBoardApp.Infrastructure.Data
 
             modelBuilder.Entity<JobApplication>()
                 .Property(ja => ja.ApplicationDate)
+                .HasColumnType("timestamp")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            modelBuilder.Entity<Notification>()
+                .Property(ja => ja.CreatedAt)
                 .HasColumnType("timestamp")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
         }
