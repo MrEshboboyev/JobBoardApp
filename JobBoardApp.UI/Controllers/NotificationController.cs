@@ -17,24 +17,25 @@ namespace JobBoardApp.UI.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var userNotifications = (await _notificationService.GetUserNotificationsAsync(GetUserId())).Data;
+            var userNotifications = (await _notificationService.GetUserNotificationsAsync(GetUserId(), true)).Data;
             return View(userNotifications);
         }
 
         [HttpPost]
-        public async Task<IActionResult> MarkAsRead(Guid notificationId)
+        public async Task<IActionResult> MarkAsRead(Guid id)
         {
-            var result = await _notificationService.MarkNotificationAsReadAsync(notificationId);
+            var result = await _notificationService.MarkNotificationAsReadAsync(id);
 
             if (result.Success)
             {
-                TempData["success"] = "Mark notifications as Read success!";
+                TempData["success"] = "Notification marked as read successfully!";
                 return RedirectToAction(nameof(Index));
             }
 
-            TempData["error"] = $"Failed to mark notification as read process. Error : {result.Message}";
+            TempData["error"] = $"Failed to mark notification as read. Error: {result.Message}";
             return RedirectToAction(nameof(Index));
         }
+
 
         public async Task<IActionResult> GetUnreadCount()
         {
