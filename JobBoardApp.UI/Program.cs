@@ -1,5 +1,6 @@
 using JobBoardApp.Application.Mappings;
 using JobBoardApp.Infrastructure.Configurations;
+using JobBoardApp.Infrastructure.RealTime;
 using JobBoardApp.Infrastructure.Services;
 using JobBoardApp.UI.Services;
 using JobBoardApp.UI.Services.IServices;
@@ -20,6 +21,8 @@ builder.Services.AddIdentityConfiguration();
 // configure lifetime for services
 builder.Services.AddApplicationServices(builder.Configuration);
 builder.Services.AddScoped<ITokenProvider, TokenProvider>();
+
+builder.Services.AddSignalR();
 
 // configure automapper
 builder.Services.AddAutoMapper(typeof(MappingProfile));
@@ -64,6 +67,8 @@ app.MapAreaControllerRoute(
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapHub<NotificationHub>("/notificationHub");
 
 app.SeedDatabase();
 
