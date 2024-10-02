@@ -7,11 +7,12 @@ using JobBoardApp.Domain.Enums;
 
 namespace JobBoardApp.Infrastructure.Implementations
 {
-    public class JobApplicationService(IUnitOfWork unitOfWork, IMapper mapper) : IJobApplicationService
+    public class JobApplicationService(IUnitOfWork unitOfWork, IMapper mapper,
+        INotificationService notificationService) : IJobApplicationService
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly IMapper _mapper = mapper;
-
+        private readonly INotificationService _notificationService = notificationService;
         
         public async Task<ResponseDTO<IEnumerable<JobApplicationDTO>>> GetJobSeekerApplicationsAsync(string jobSeekerId)
         {
@@ -75,12 +76,28 @@ namespace JobBoardApp.Infrastructure.Implementations
         {
             try
             {
+                var jobListingFromDb = await _unitOfWork.JobListing.GetAsync(
+                    jl => jl.Id.Equals(jobApplicationDTO.JobListingId)
+                    ) ?? throw new Exception("Job Listing not found!");
+
                 var jobApplicationForDb = _mapper.Map<JobApplication>(jobApplicationDTO);
                 jobApplicationForDb.ApplicationDate = DateTime.Now;
                 jobApplicationForDb.Status = ApplicationStatus.Pending;
 
                 await _unitOfWork.JobApplication.AddAsync(jobApplicationForDb);
                 await _unitOfWork.SaveAsync();
+
+
+                // create notification and send
+                NotificationDTO notificationDTO = new()
+                {
+                    RecipientId = jobListingFromDb.EmployerId,
+                    JobApplicationId = jobApplicationForDb.Id,
+                    JobListingId = jobApplicationForDb.JobListingId,
+                    Message = $"New job application received for your job listing: {jobListingFromDb.Title}"
+                };
+
+                await _notificationService.CreateNotificationAsync(notificationDTO);
 
                 return new ResponseDTO<bool>(true);
             }
@@ -95,13 +112,28 @@ namespace JobBoardApp.Infrastructure.Implementations
             try
             {
                 var jobApplicationFromDb = await _unitOfWork.JobApplication.GetAsync(
-                    ja => ja.Id.Equals(jobApplicationDTO.Id)
+                    filter: ja => ja.Id.Equals(jobApplicationDTO.Id),
+                    includeProperties: "JobListing,JobSeeker"
                     ) ?? throw new Exception("Job Application not found!");
 
                 jobApplicationFromDb.Status = jobApplicationDTO.Status;
 
                 await _unitOfWork.JobApplication.UpdateAsync(jobApplicationFromDb);
                 await _unitOfWork.SaveAsync();
+
+                // create notification and send
+                NotificationDTO notificationDTO = new()
+                {
+                    RecipientId = jobApplicationFromDb.JobSeekerId,
+                    JobListingId = jobApplicationFromDb.JobListingId,
+                    JobApplicationId = jobApplicationFromDb.Id,
+                    JobListingTitle = jobApplicationFromDb.JobListing.Title,
+                    Message = $"Your application for the job listing " +
+                    $"'{jobApplicationFromDb.JobListing.Title}'" +
+                    $" has been updated to '{jobApplicationFromDb.Status}'"
+                };
+
+                await _notificationService.CreateNotificationAsync(notificationDTO);
 
                 return new ResponseDTO<bool>(true);
             }

@@ -18,7 +18,7 @@ connection.on("ReceiveNotification", (message) => {
 
 // Function to update unread notification count in the UI
 function updateUnreadCount() {
-    fetch('/notification/Index')
+    fetch('/notification/GetUnreadCount')
         .then(response => response.json())
         .then(data => {
             document.getElementById('notificationCount').innerText = data.unreadCount;
