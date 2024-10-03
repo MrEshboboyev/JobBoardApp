@@ -9,7 +9,7 @@ namespace JobBoardApp.UI.Areas.JobSeeker.ViewModels
         public Guid JobListingId { get; set; }
         public string JobSeekerId { get; set; }
         [Required]
-        public string Resume { get; set; }
+        public string ResumePath { get; set; }
         [Required]
         public string CoverLetter { get; set; }
         [Required]

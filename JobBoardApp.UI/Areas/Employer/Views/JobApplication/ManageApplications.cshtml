@@ -56,7 +56,7 @@
                                     <tr>
                                         <td>@application.JobSeekerName</td>
                                         <td>
-                                            <a href="@Url.Action("DownloadResume", new { id = application.Id })" class="btn btn-info btn-sm">
+                                            <a href="@application.ResumePath" class="btn btn-info btn-sm" target="_blank">
                                                 <i class="bi bi-download"></i> Resume
                                             </a>
                                         </td>

@@ -10,10 +10,12 @@ namespace JobBoardApp.UI.Areas.JobSeeker.Controllers
     [Area("JobSeeker")]
     [Authorize(Roles = "JobSeeker")]
     public class JobApplicationController(IJobApplicationService jobApplicationService,
-        IJobListingService jobListingService) : Controller
+        IJobListingService jobListingService,
+        IUserProfileService userProfileService) : Controller
     {
         private readonly IJobApplicationService _jobApplicationService = jobApplicationService;
         private readonly IJobListingService _jobListingService = jobListingService;
+        private readonly IUserProfileService _userProfileService = userProfileService;
 
         #region Private Methods
         private string GetUserId() => User.FindFirstValue(ClaimTypes.NameIdentifier)
@@ -31,9 +33,12 @@ namespace JobBoardApp.UI.Areas.JobSeeker.Controllers
         {
             var jobListing = (await _jobListingService.GetJobListingAsync(jobListingId)).Data;
 
+            var jobSeekerUserProfile = (await _userProfileService.GetProfileAsync(GetUserId())).Data;
+
             JobApplicationVM jobApplicationVM = new()
             {
-                JobListing = jobListing
+                JobListing = jobListing,
+                ResumePath = jobSeekerUserProfile.ResumePath
             };
 
             return View(jobApplicationVM);
@@ -46,7 +51,7 @@ namespace JobBoardApp.UI.Areas.JobSeeker.Controllers
             {
                 JobSeekerId = GetUserId(),
                 JobListingId = jobApplicationVM.JobListingId,
-                Resume = jobApplicationVM.Resume,
+                ResumePath = jobApplicationVM.ResumePath,
                 CoverLetter = jobApplicationVM.CoverLetter
             };
 
