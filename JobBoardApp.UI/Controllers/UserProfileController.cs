@@ -1,24 +1,17 @@
 ﻿using JobBoardApp.Application.DTOs;
 using JobBoardApp.Application.Services.Interfaces;
-using JobBoardApp.UI.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using System.IO;
 
 namespace JobBoardApp.UI.Controllers
 {
     [Authorize]
-    public class UserProfileController : Controller
+    public class UserProfileController(IUserProfileService userProfileService,
+        IWebHostEnvironment hostingEnvironment) : Controller
     {
-        private readonly IUserProfileService _userProfileService;
-        private readonly IWebHostEnvironment _hostingEnvironment;
-
-        public UserProfileController(IUserProfileService userProfileService, IWebHostEnvironment hostingEnvironment)
-        {
-            _userProfileService = userProfileService;
-            _hostingEnvironment = hostingEnvironment;
-        }
+        private readonly IUserProfileService _userProfileService = userProfileService;
+        private readonly IWebHostEnvironment _hostingEnvironment = hostingEnvironment;
 
         #region Private Methods
         private string GetUserId() => User.FindFirstValue(ClaimTypes.NameIdentifier)

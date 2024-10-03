@@ -20,6 +20,20 @@
                         <input asp-for="Id" hidden />
                         <input asp-for="UserId" hidden />
 
+                        <!-- Bio -->
+                        <div class="mb-3">
+                            <label asp-for="Bio" class="form-label">Bio</label>
+                            <textarea asp-for="Bio" class="form-control" rows="4" placeholder="Write a short bio..."></textarea>
+                            <span asp-validation-for="Bio" class="text-danger"></span>
+                        </div>
+
+                        <!--Website details-->
+                        <div class="mb-3">
+                            <label asp-for="Website" class="form-label">Website</label>
+                            <input asp-for="Website" class="form-control" placeholder="Enter your website URL" />
+                            <span asp-validation-for="Website" class="text-danger"></span>
+                        </div>
+
                         <!-- Company Info (optional for employers) -->
                         @if (User.IsInRole(UserRole.Employer.ToString()))
                         {
@@ -28,33 +42,37 @@
                                 <input asp-for="CompanyName" class="form-control" placeholder="Enter your company name" />
                                 <span asp-validation-for="CompanyName" class="text-danger"></span>
                             </div>
+                        }
 
+                        <!-- Resume (required for job seekers) -->
+                        @if (User.IsInRole(UserRole.JobSeeker.ToString()))
+                        {
+                            <!-- Resume Upload -->
                             <div class="mb-3">
-                                <label asp-for="Website" class="form-label">Website</label>
-                                <input asp-for="Website" class="form-control" placeholder="Enter your website URL" />
-                                <span asp-validation-for="Website" class="text-danger"></span>
+                                <label asp-for="Resume" class="form-label">Upload Resume</label>
+                                <input asp-for="Resume" type="file" class="form-control" />
+                                <span asp-validation-for="Resume" class="text-danger"></span>
                             </div>
                         }
 
-                        <!-- Bio -->
-                        <div class="mb-3">
-                            <label asp-for="Bio" class="form-label">Bio</label>
-                            <textarea asp-for="Bio" class="form-control" rows="4" placeholder="Write a short bio..."></textarea>
-                            <span asp-validation-for="Bio" class="text-danger"></span>
-                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <!-- Return Link -->
+                                <div class="text-center">
+                                    <a asp-action="Index" class="btn btn-outline-secondary">
+                                        <i class="bi bi-arrow-left-circle"></i> Back to Profile
+                                    </a>
+                                </div>
+                            </div>
 
-                        <!-- Resume Upload -->
-                        <div class="mb-3">
-                            <label asp-for="Resume" class="form-label">Upload Resume</label>
-                            <input asp-for="Resume" type="file" class="form-control" />
-                            <span asp-validation-for="Resume" class="text-danger"></span>
-                        </div>
-
-                        <!-- Submit Button -->
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-success">
-                                <i class="bi bi-check-circle"></i> Save Changes
-                            </button>
+                            <div class="col">
+                                <!-- Submit Button -->
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-outline-success">
+                                        <i class="bi bi-check-circle"></i> Save Changes
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
