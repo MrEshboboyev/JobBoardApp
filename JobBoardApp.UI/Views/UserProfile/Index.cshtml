@@ -1,4 +1,4 @@
-﻿@model UserProfileVM
+﻿@model UserProfileDTO
 
 @{
     ViewData["Title"] = "User Profile";
@@ -17,24 +17,24 @@
                 <div class="card-body">
                     <div class="row mb-3">
                         <div class="col-4 text-muted"><strong>Email:</strong></div>
-                        <div class="col-8">@Model.Email</div>
+                        <div class="col-8">@User.FindFirstValue(ClaimTypes.Email)</div>
                     </div>
 
                     <div class="row mb-3">
                         <div class="col-4 text-muted"><strong>Username:</strong></div>
-                        <div class="col-8">@Model.UserName</div>
+                        <div class="col-8">@Model.OwnerName</div>
                     </div>
 
                     <div class="row mb-3">
                         <div class="col-4 text-muted"><strong>Role:</strong></div>
                         <div class="col-8">
-                            <span class="badge @((Model.RoleName == "Employer") ? "bg-success" : "bg-info")">
-                                @Model.RoleName
+                            <span class="badge @((User.IsInRole("Employer")) ? "bg-success" : "bg-info")">
+                                @User.FindFirstValue(ClaimTypes.Role)
                             </span>
                         </div>
                     </div>
 
-                    @if (Model.RoleName == "Employer")
+                    @if (User.IsInRole("Employer"))
                     {
                         <!-- Employer Specific Fields -->
                         <hr />

@@ -28,22 +28,7 @@ namespace JobBoardApp.UI.Controllers
         public async Task<IActionResult> Index()
         {
             var userProfile = (await _userProfileService.GetProfileAsync(GetUserId())).Data;
-
-            UserProfileVM profileVM = new()
-            {
-                Bio = userProfile.Bio,
-                Email = User.FindFirstValue(ClaimTypes.Email),
-                UserName = userProfile.OwnerName,
-                Website = userProfile.Website,
-                CompanyName = userProfile.CompanyName,
-                Id = userProfile.Id,
-                OwnerName = userProfile.OwnerName,
-                RoleName = User.FindFirstValue(ClaimTypes.Role),
-                UserId = GetUserId(),
-                ResumePath = userProfile.ResumePath
-            };
-
-            return View(profileVM);
+            return View(userProfile);
         }
 
         [HttpGet]
