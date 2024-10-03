@@ -14,7 +14,7 @@ namespace JobBoardApp.Domain.Entities
         public Guid JobListingId { get; set; } // Foreign key to JobListing
         public string JobSeekerId { get; set; } // Foreign key to User (Job Seeker)
         [Required]
-        public string Resume { get; set; } // Could be a file path or the content
+        public string ResumePath { get; set; } // Could be a file path or the content
         [Required]
         public string CoverLetter { get; set; }
         public DateTime ApplicationDate { get; set; }
