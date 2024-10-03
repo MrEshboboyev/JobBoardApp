@@ -24,7 +24,5 @@ namespace JobBoardApp.Domain.Entities
         public List<JobApplication> JobApplications { get; set; }
 
         public ICollection<Notification> Notifications { get; set; } = [];
-
-        public string DefaultResumePath { get; set; }
     }
 }

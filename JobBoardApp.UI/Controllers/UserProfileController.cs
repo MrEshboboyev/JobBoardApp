@@ -4,14 +4,21 @@ using JobBoardApp.UI.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.IO;
 
 namespace JobBoardApp.UI.Controllers
 {
     [Authorize]
-    public class UserProfileController(IUserProfileService userProfileService) :
-        Controller
+    public class UserProfileController : Controller
     {
-        private readonly IUserProfileService _userProfileService = userProfileService;
+        private readonly IUserProfileService _userProfileService;
+        private readonly IWebHostEnvironment _hostingEnvironment;
+
+        public UserProfileController(IUserProfileService userProfileService, IWebHostEnvironment hostingEnvironment)
+        {
+            _userProfileService = userProfileService;
+            _hostingEnvironment = hostingEnvironment;
+        }
 
         #region Private Methods
         private string GetUserId() => User.FindFirstValue(ClaimTypes.NameIdentifier)
@@ -22,7 +29,7 @@ namespace JobBoardApp.UI.Controllers
         {
             var userProfile = (await _userProfileService.GetProfileAsync(GetUserId())).Data;
 
-             UserProfileVM profileVM = new()
+            UserProfileVM profileVM = new()
             {
                 Bio = userProfile.Bio,
                 Email = User.FindFirstValue(ClaimTypes.Email),
@@ -50,6 +57,25 @@ namespace JobBoardApp.UI.Controllers
         {
             if (!ModelState.IsValid)
                 return View(userProfileDTO);
+
+            // Check if a file has been uploaded
+            if (userProfileDTO.ProfilePicture != null)
+            {
+                var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads/profile_pictures");
+                var uniqueFileName = Guid.NewGuid().ToString() + "_" + userProfileDTO.ProfilePicture.FileName;
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                if (!Directory.Exists(uploadsFolder))
+                    Directory.CreateDirectory(uploadsFolder);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await userProfileDTO.ProfilePicture.CopyToAsync(fileStream);
+                }
+
+                // Store the file path in the user's profile
+                userProfileDTO.ProfilePicturePath = "/uploads/profile_pictures/" + uniqueFileName;
+            }
 
             // Update the user profile
             var result = await _userProfileService.UpdateProfileAsync(userProfileDTO);
