@@ -6,7 +6,7 @@
 
 <h2>Register</h2>
 
-<form asp-action="Register" method="post" id="registerForm">
+<form asp-action="Register" method="post" id="registerForm" enctype="multipart/form-data">
     <div class="row">
         <!-- Email -->
         <div class="col-12 col-md-6 pb-2">
@@ -32,6 +32,20 @@
             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
         </div>
     </div>
+    <div class="row">
+        <!-- Website -->
+        <div class="col-12 col-md-6 pb-2">
+            <input asp-for="Website" class="form-control" placeholder="Website..." />
+            <span asp-validation-for="Website" class="text-danger"></span>
+        </div>
+    </div>
+
+
+    <!-- Bio -->
+    <div class="col-12 col-md-6 pb-2">
+        <textarea asp-for="Bio" class="form-control" placeholder="Bio..."></textarea>
+        <span asp-validation-for="Bio" class="text-danger"></span>
+    </div>
 
     <div class="row">
         <!-- Role Selection -->
@@ -52,20 +66,17 @@
             <input asp-for="CompanyName" class="form-control" placeholder="Company Name..." />
             <span asp-validation-for="CompanyName" class="text-danger"></span>
         </div>
-        <!-- Website (Employer) -->
+    </div>
+
+    <div class="row" id="JobSeekerFields" style="display:none;">
+        <!-- Resume Upload (JobSeeker) -->
         <div class="col-12 col-md-6 pb-2">
-            <input asp-for="Website" class="form-control" placeholder="Website..." />
-            <span asp-validation-for="Website" class="text-danger"></span>
+            <label asp-for="Resume" class="form-label">Upload Resume</label>
+            <input asp-for="Resume" type="file" class="form-control" />
+            <span asp-validation-for="Resume" class="text-danger"></span>
         </div>
     </div>
 
-    <div class="row">
-        <!-- Bio (Job Seeker or Employer) -->
-        <div class="col-12 col-md-6 pb-2" id="BioField" style="display:none;">
-            <textarea asp-for="Bio" class="form-control" placeholder="Bio..."></textarea>
-            <span asp-validation-for="Bio" class="text-danger"></span>
-        </div>
-    </div>
 
     <div class="row">
         <div class="col-12 col-md-6 pb-2">

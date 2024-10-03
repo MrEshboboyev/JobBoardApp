@@ -13,11 +13,13 @@ namespace JobBoardApp.UI.Controllers
 {
     public class AccountController(IAuthService authService,
         ITokenProvider tokenProvider,
-        SignInManager<AppUser> signInManager) : Controller
+        SignInManager<AppUser> signInManager,
+        IWebHostEnvironment webHostEnvironment) : Controller
     {
         private readonly IAuthService _authService = authService;
         private readonly ITokenProvider _tokenProvider = tokenProvider;
         private readonly SignInManager<AppUser> _signInManager = signInManager;
+        private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
 
         [HttpGet]
         public async Task<IActionResult> Register()
@@ -68,18 +70,25 @@ namespace JobBoardApp.UI.Controllers
                 return View(model);
             }
 
-            RegisterModel registerModel = new()
+            // Check if a new resume has been uploaded
+            if (model.Resume != null)
             {
-                Email = model.Email,
-                UserName = model.UserName,
-                Password = model.Password,
-                Role = model.Role,
-                Bio = model.Bio,
-                Website = model.Website,
-                CompanyName = model.CompanyName,
-            };
+                var resumeFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads/resumes");
+                var uniqueResumeFileName = Guid.NewGuid().ToString() + "_" + model.Resume.FileName;
+                var resumeFilePath = Path.Combine(resumeFolder, uniqueResumeFileName);
 
-            var result = await _authService.RegisterAsync(registerModel);
+                if (!Directory.Exists(resumeFolder))
+                    Directory.CreateDirectory(resumeFolder);
+
+                using (var resumeStream = new FileStream(resumeFilePath, FileMode.Create))
+                {
+                    await model.Resume.CopyToAsync(resumeStream);
+                }
+
+                model.ResumePath = "/uploads/resumes/" + uniqueResumeFileName;
+            }
+
+            var result = await _authService.RegisterAsync(model);
 
             if (result.Success)
             {

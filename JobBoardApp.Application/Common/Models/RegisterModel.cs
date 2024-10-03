@@ -1,4 +1,5 @@
 ﻿using JobBoardApp.Domain.Enums;
+using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 
 namespace JobBoardApp.Application.Common.Models
@@ -25,5 +26,9 @@ namespace JobBoardApp.Application.Common.Models
         public string? Bio { get; set; }
         public string? CompanyName { get; set; } // Used for employers
         public string? Website { get; set; } // Used for employers
+
+
+        public IFormFile? Resume { get; set; }
+        public string? ResumePath { get; set; }
     }
 }

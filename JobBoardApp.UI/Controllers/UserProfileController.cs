@@ -61,33 +61,6 @@ namespace JobBoardApp.UI.Controllers
 
             var currentProfile = await _userProfileService.GetProfileAsync(GetUserId());
 
-            // Check if a new resume has been uploaded
-            if (userProfileDTO.Resume != null)
-            {
-                var resumeFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads/resumes");
-                var uniqueResumeFileName = Guid.NewGuid().ToString() + "_" + userProfileDTO.Resume.FileName;
-                var resumeFilePath = Path.Combine(resumeFolder, uniqueResumeFileName);
-
-                if (!Directory.Exists(resumeFolder))
-                    Directory.CreateDirectory(resumeFolder);
-
-                using (var resumeStream = new FileStream(resumeFilePath, FileMode.Create))
-                {
-                    await userProfileDTO.Resume.CopyToAsync(resumeStream);
-                }
-
-                // Delete old resume if exists
-                if (!string.IsNullOrEmpty(currentProfile.Data.ResumePath))
-                {
-                    var oldResumeFilePath = Path.Combine(_hostingEnvironment.WebRootPath, currentProfile.Data.ResumePath.TrimStart('/'));
-                    if (System.IO.File.Exists(oldResumeFilePath))
-                        System.IO.File.Delete(oldResumeFilePath);
-                }
-
-                // Store the new resume path
-                userProfileDTO.ResumePath = "/uploads/resumes/" + uniqueResumeFileName;
-            }
-
             // Update the user profile
             var result = await _userProfileService.UpdateProfileAsync(userProfileDTO);
 

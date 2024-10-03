@@ -35,13 +35,13 @@
         var role = $(this).val();
         if (role === "Employer") {
             $('#EmployerFields').show();
-            $('#BioField').show();
+            $('#JobSeekerFields').hide();
         } else if (role === "JobSeeker") {
             $('#EmployerFields').hide();
-            $('#BioField').show();
+            $('#JobSeekerFields').show();
         } else {
             $('#EmployerFields').hide();
-            $('#BioField').hide();
+            $('#JobSeekerFields').hide();
         }
 
         // Validate the form when the role changes

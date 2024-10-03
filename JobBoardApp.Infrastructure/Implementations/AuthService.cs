@@ -120,20 +120,21 @@ namespace JobBoardApp.Infrastructure.Implementations
                 if(!result.Succeeded)
                     return new ResponseDTO<string>($"Error : {result.Errors.FirstOrDefault()!.Description}");
 
+                // assign role
+                await _userManager.AddToRoleAsync(user, registerModel.Role.ToString());
+
                 // create user profile
                 UserProfile userProfile = new()
                 {
                     Bio = registerModel.Bio,
                     CompanyName = registerModel.CompanyName,
                     Website = registerModel.Website,
-                    UserId = user.Id
+                    UserId = user.Id,
+                    ResumePath = registerModel.ResumePath
                 };
 
                 await _unitOfWork.UserProfile.AddAsync(userProfile);
                 await _unitOfWork.SaveAsync();
-
-                // assign role
-                await _userManager.AddToRoleAsync(user, registerModel.Role.ToString());
 
                 return new ResponseDTO<string>(null, "Registration successful!");
             }
