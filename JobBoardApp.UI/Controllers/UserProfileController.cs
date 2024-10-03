@@ -37,7 +37,24 @@ namespace JobBoardApp.UI.Controllers
             if (!ModelState.IsValid)
                 return View(userProfileDTO);
 
-            var currentProfile = await _userProfileService.GetProfileAsync(GetUserId());
+            if (User.IsInRole("JobSeeker"))
+            {
+                var resumeFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads/resumes");
+                var uniqueFileName = Guid.NewGuid().ToString() + "_" + userProfileDTO.Resume.FileName;
+                var resumePath = Path.Combine(resumeFolder, uniqueFileName);
+
+                // Delete old resume
+                var oldResumePath = userProfileDTO.ResumePath;
+                if (Directory.Exists(oldResumePath))
+                    Directory.Delete(oldResumePath);
+
+                using (var resumeStream = new FileStream(resumePath, FileMode.Create))
+                {
+                    await userProfileDTO.Resume.CopyToAsync(resumeStream);
+                }
+
+                userProfileDTO.ResumePath = "/uploads/resumes/" + uniqueFileName;
+            }
 
             // Update the user profile
             var result = await _userProfileService.UpdateProfileAsync(userProfileDTO);

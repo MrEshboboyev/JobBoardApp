@@ -14,7 +14,7 @@ namespace JobBoardApp.Application.DTOs
         public string? OwnerName { get; set; }
 
         [Display(Name = "Resume")]
-        public IFormFile Resume { get; set; }
+        public IFormFile? Resume { get; set; }
 
         public string? ResumePath { get; set; }
     }
