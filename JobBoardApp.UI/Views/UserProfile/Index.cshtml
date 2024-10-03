@@ -66,6 +66,18 @@
                         </div>
                     }
 
+                    @if (!string.IsNullOrEmpty(Model.ResumePath))
+                    {
+                        <div class="row mb-3">
+                            <div class="col-4 text-muted"><strong>Resume:</strong></div>
+                            <div class="col-8">
+                                <a href="@Model.ResumePath" class="btn btn-info" target="_blank">
+                                    <i class="bi bi-download"></i> Download Resume
+                                </a>
+                            </div>
+                        </div>
+                    }
+
                     <!-- Update Button -->
                     <div class="text-center mt-4">
                         <a asp-action="Update" asp-route-profileId="@Model.Id" class="btn btn-primary">

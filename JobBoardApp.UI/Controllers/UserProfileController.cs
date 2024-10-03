@@ -39,7 +39,8 @@ namespace JobBoardApp.UI.Controllers
                 Id = userProfile.Id,
                 OwnerName = userProfile.OwnerName,
                 RoleName = User.FindFirstValue(ClaimTypes.Role),
-                UserId = GetUserId()
+                UserId = GetUserId(),
+                ResumePath = userProfile.ResumePath
             };
 
             return View(profileVM);
@@ -58,23 +59,33 @@ namespace JobBoardApp.UI.Controllers
             if (!ModelState.IsValid)
                 return View(userProfileDTO);
 
-            // Check if a file has been uploaded
-            if (userProfileDTO.ProfilePicture != null)
+            var currentProfile = await _userProfileService.GetProfileAsync(GetUserId());
+
+            // Check if a new resume has been uploaded
+            if (userProfileDTO.Resume != null)
             {
-                var uploadsFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads/profile_pictures");
-                var uniqueFileName = Guid.NewGuid().ToString() + "_" + userProfileDTO.ProfilePicture.FileName;
-                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                var resumeFolder = Path.Combine(_hostingEnvironment.WebRootPath, "uploads/resumes");
+                var uniqueResumeFileName = Guid.NewGuid().ToString() + "_" + userProfileDTO.Resume.FileName;
+                var resumeFilePath = Path.Combine(resumeFolder, uniqueResumeFileName);
 
-                if (!Directory.Exists(uploadsFolder))
-                    Directory.CreateDirectory(uploadsFolder);
+                if (!Directory.Exists(resumeFolder))
+                    Directory.CreateDirectory(resumeFolder);
 
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                using (var resumeStream = new FileStream(resumeFilePath, FileMode.Create))
                 {
-                    await userProfileDTO.ProfilePicture.CopyToAsync(fileStream);
+                    await userProfileDTO.Resume.CopyToAsync(resumeStream);
                 }
 
-                // Store the file path in the user's profile
-                userProfileDTO.ProfilePicturePath = "/uploads/profile_pictures/" + uniqueFileName;
+                // Delete old resume if exists
+                if (!string.IsNullOrEmpty(currentProfile.Data.ResumePath))
+                {
+                    var oldResumeFilePath = Path.Combine(_hostingEnvironment.WebRootPath, currentProfile.Data.ResumePath.TrimStart('/'));
+                    if (System.IO.File.Exists(oldResumeFilePath))
+                        System.IO.File.Delete(oldResumeFilePath);
+                }
+
+                // Store the new resume path
+                userProfileDTO.ResumePath = "/uploads/resumes/" + uniqueResumeFileName;
             }
 
             // Update the user profile
@@ -89,5 +100,6 @@ namespace JobBoardApp.UI.Controllers
             TempData["error"] = $"Failed to update profile. Error: {result.Message}";
             return View(userProfileDTO);
         }
+
     }
 }

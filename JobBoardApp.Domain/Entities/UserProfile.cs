@@ -10,7 +10,7 @@
         public string? Bio { get; set; } // Used for job seekers, or both
 
         // New property for storing the profile picture path
-        public string? ProfilePicturePath { get; set; }
+        public string? ResumePath { get; set; }
 
         // Navigation property
         public AppUser User { get; set; }

@@ -8,17 +8,14 @@ namespace JobBoardApp.Application.DTOs
     {
         public Guid Id { get; set; }
         public string UserId { get; set; }
-
         public string? CompanyName { get; set; }
         public string? Website { get; set; }
         public string? Bio { get; set; }
-
         public string? OwnerName { get; set; }
 
-        // File upload for profile picture
-        [Display(Name = "Profile Picture")]
-        public IFormFile ProfilePicture { get; set; }
+        [Display(Name = "Resume")]
+        public IFormFile Resume { get; set; }
 
-        public string? ProfilePicturePath { get; set; } // Stores the path of the uploaded profile picture
+        public string? ResumePath { get; set; }
     }
 }
