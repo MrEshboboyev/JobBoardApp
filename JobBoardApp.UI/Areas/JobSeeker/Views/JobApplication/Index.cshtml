@@ -8,7 +8,7 @@
     <h2 class="text-center mb-5">Job Applications</h2>
 
     <div class="row justify-content-center">
-        @foreach (var application in Model)
+        @foreach (var application in Model.OrderByDescending(ja => ja.ApplicationDate))
         {
             <div class="col-md-6 mb-4">
                 <!-- Job Application Card -->

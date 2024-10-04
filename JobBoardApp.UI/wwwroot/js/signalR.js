@@ -10,7 +10,7 @@ connection.start().then(() => {
 // Listen for real-time notifications
 connection.on("ReceiveNotification", (message) => {
     // Update the UI with the new notification
-    alert("New Notification: " + message);  // For now, just alert the user
+    toast.success("New Notification: " + message);  // For now, just alert the user
 
     // Optionally, update the unread count dynamically in the UI
     updateUnreadCount();
