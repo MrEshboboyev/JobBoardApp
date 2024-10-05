@@ -6,6 +6,7 @@
         IJobListingRepository JobListing { get; }
         IUserProfileRepository UserProfile { get; }
         INotificationRepository Notification { get; }
+        IUserRepository User { get; }
 
         Task SaveAsync();
     }

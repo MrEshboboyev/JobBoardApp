@@ -53,7 +53,12 @@ namespace JobBoardApp.Application.Mappings
 
             // AppUser -> UserDTO
             CreateMap<AppUser, UserDTO>()
-                .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => _userManager.GetRolesAsync(src)));
+                .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => _userManager.GetRolesAsync(src)))
+                .ReverseMap()
+                    .ForMember(dest => dest.UserProfile, opt => opt.Ignore())
+                    .ForMember(dest => dest.Notifications, opt => opt.Ignore())
+                    .ForMember(dest => dest.JobListings, opt => opt.Ignore())
+                    .ForMember(dest => dest.JobApplications, opt => opt.Ignore());
 
             // AppUser -> UserActivityDTO
             CreateMap<AppUser, UserActivityDTO>()

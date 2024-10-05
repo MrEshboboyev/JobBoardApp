@@ -1,20 +1,21 @@
 ﻿using JobBoardApp.Application.DTOs;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace JobBoardApp.Application.Services.Interfaces
 {
     public interface IUserService
     {
-        Task<IEnumerable<UserDTO>> GetAllUsersAsync();
-        Task<UserDTO> GetUserByIdAsync();
+        Task<ResponseDTO<IEnumerable<UserDTO>>> GetAllUsersAsync();
+        Task<ResponseDTO<UserDTO>> GetUserByIdAsync(string userId);
         Task<ResponseDTO<bool>> UpdateUserAsync(UserDTO userDto);
         Task<ResponseDTO<bool>> ActivateUserAsync(string userId);
         Task<ResponseDTO<bool>> DeactivateUserAsync(string userId);
         Task<ResponseDTO<bool>> SuspendUserAsync(string userId, string reason, DateTime? endDate);
         Task<ResponseDTO<bool>> DeleteUserAsync(string userId);
-        Task<ResponseDTO<bool>> ResetUserPasswordAsync(string userId);
+        Task<ResponseDTO<bool>> ResetUserPasswordAsync(string userId, string newPassword);
         Task<ResponseDTO<bool>> AssignRoleAsync(string userId, string role);
         Task<ResponseDTO<bool>> UnlockUserAsync(string userId);
-        Task<UserActivityDTO> GetUserActivityAsync(string userId);
-        Task<IEnumerable<string>> ViewUserRolesAsync(string userId);
+        Task<ResponseDTO<UserActivityDTO>> GetUserActivityAsync(string userId);
+        Task<ResponseDTO<IEnumerable<string>>> ViewUserRolesAsync(string userId);
     }
 }
