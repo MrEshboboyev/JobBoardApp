@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
 using JobBoardApp.Application.Common.Interfaces;
 using JobBoardApp.Application.DTOs;
+using JobBoardApp.Application.Services.Interfaces;
 using JobBoardApp.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 
-namespace JobBoardApp.Application.Services.Interfaces
+namespace JobBoardApp.Infrastructure.Implementations
 {
     public class UserService(UserManager<AppUser> userManager,
         RoleManager<IdentityRole> roleManager,
@@ -21,16 +22,24 @@ namespace JobBoardApp.Application.Services.Interfaces
             try
             {
                 var allUsers = await _unitOfWork.User.GetAllAsync();
+                var userDTOs = new List<UserDTO>();
 
-                var mappedUsers = _mapper.Map<IEnumerable<UserDTO>>(allUsers);
+                foreach (var user in allUsers)
+                {
+                    var mappedUser = _mapper.Map<UserDTO>(user);
+                    var roles = await _userManager.GetRolesAsync(user);
+                    mappedUser.Roles = roles; // Assign roles after mapping
+                    userDTOs.Add(mappedUser);
+                }
 
-                return new ResponseDTO<IEnumerable<UserDTO>>(mappedUsers);
+                return new ResponseDTO<IEnumerable<UserDTO>>(userDTOs);
             }
             catch (Exception ex)
             {
                 return new ResponseDTO<IEnumerable<UserDTO>>(ex.Message);
             }
         }
+
 
         public async Task<ResponseDTO<UserDTO>> GetUserByIdAsync(string userId)
         {
@@ -41,6 +50,8 @@ namespace JobBoardApp.Application.Services.Interfaces
                     ) ?? throw new Exception("User not found!");
 
                 var mappedUser = _mapper.Map<UserDTO>(userFromDb);
+                var roles = await _userManager.GetRolesAsync(userFromDb);
+                mappedUser.Roles = roles; // Assign roles after mapping
 
                 return new ResponseDTO<UserDTO>(mappedUser);
             }
@@ -158,7 +169,6 @@ namespace JobBoardApp.Application.Services.Interfaces
             }
         }
 
-        // not Handle yet
         public async Task<ResponseDTO<bool>> ResetUserPasswordAsync(string userId, string newPassword)
         {
             try
@@ -210,7 +220,6 @@ namespace JobBoardApp.Application.Services.Interfaces
             }
         }
 
-        // not handle yet
         public async Task<ResponseDTO<bool>> UnlockUserAsync(string userId)
         {
             try
