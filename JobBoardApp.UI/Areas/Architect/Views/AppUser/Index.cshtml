@@ -1,33 +1,31 @@
-﻿@model IEnumerable<JobListingDTO>
+﻿@model IEnumerable<UserDTO>
 
 <div class="container py-5">
-    <h2 class="text-center mb-5">All Job Listings</h2>
+    <h2 class="text-center mb-5">All Users</h2>
 
     <div class="table-responsive">
-        <table class="table table-bordered table-hover" id="jobListingsTable">
+        <table class="table table-bordered table-hover" id="usersTable">
             <thead>
                 <tr>
-                    <th>Employer Name</th>
-                    <th>Title</th>
-                    <th>Location</th>
-                    <th>Salary</th>
-                    <th>Job Type</th>
-                    <th>Status</th> 
+                    <th>UserName</th>
+                    <th>Email</th>
+                    <th>Date Registered</th>
+                    <th>Last Login Date</th>
+                    <th>Is Active</th>
                     <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var job in Model)
+                @foreach (var user in Model)
                 {
                     <tr>
-                        <td>@job.EmployerName</td>
-                        <td>@job.Title</td>
-                        <td>@job.Location</td>
-                        <td>@job.SalaryRange.ToString("C")</td>
-                        <td>@job.JobType</td>
+                        <td>@user.UserName</td>
+                        <td>@user.Email</td>
+                        <td>@user.DateRegistered.ToShortDateString()</td>
+                        <td>@user.LastLoginDate?.ToShortDateString()</td>
                         <td>
                             <!-- Display Status with a Bootstrap badge -->
-                            @if (job.IsActive)
+                            @if (user.IsActive)
                             {
                                 <span class="badge bg-success">Active</span>
                             }
@@ -39,14 +37,14 @@
                         <td>
                             <!-- SweetAlert2 Modal Trigger for Details -->
                             <button type="button" class="btn btn-outline-info btn-sm"
-                                    onclick="openJobDetails('@job.Title', '@job.EmployerName',
-                                    '@job.Description', '@job.Location', '@job.SalaryRange.ToString("C")',
-                                    '@job.JobType', '@job.IsActive')">
+                                    onclick="openUserDetails('@user.UserName', '@user.Email',
+                                    '@user.DateRegistered',  
+                                    '@user.LastLoginDate', '@user.IsActive')">
                                 <i class="bi bi-info-circle"></i> Details
                             </button>
                             <form asp-action="Delete" method="post" class="d-inline">
-                                <input type="hidden" name="jobListingId" value="@job.Id" />
-                                <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you sure you want to delete this job listing?');">
+                                <input type="hidden" name="userId" value="@user.Id" />
+                                <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you sure you want to delete this user?');">
                                     <i class="bi bi-trash"></i> Delete
                                 </button>
                             </form>
@@ -60,10 +58,10 @@
 
 @section Scripts {
     <script>
-        initializeDataTable('#jobListingsTable', 6); // Pass table ID and non-sortable column index
+        initializeDataTable('#usersTable', 5); // Pass table ID and non-sortable column index
     </script>
     <script>
-        function openJobDetails(userName, email, dateRegistered, lastLoginDate, isActive) {
+        function openUserDetails(userName, email, dateRegistered, lastLoginDate, isActive) {
             const details = {
                 "Username": userName,
                 "Email": email,
@@ -75,4 +73,3 @@
         }
     </script>
 }
-

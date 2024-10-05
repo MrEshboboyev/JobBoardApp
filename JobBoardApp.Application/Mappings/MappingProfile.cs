@@ -7,12 +7,8 @@ namespace JobBoardApp.Application.Mappings
 {
     public class MappingProfile : Profile
     {
-        private readonly UserManager<AppUser> _userManager;
-
-        public MappingProfile(UserManager<AppUser> userManager)
+        public MappingProfile()
         {
-            _userManager = userManager;
-
             #region UserProfile
             CreateMap<UserProfile, UserProfileDTO>()
                 .ForMember(dest => dest.OwnerName, opt => opt.MapFrom(src => src.User.UserName))
@@ -53,7 +49,7 @@ namespace JobBoardApp.Application.Mappings
 
             // AppUser -> UserDTO
             CreateMap<AppUser, UserDTO>()
-                .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => _userManager.GetRolesAsync(src)))
+                .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => new List<string>()))
                 .ReverseMap()
                     .ForMember(dest => dest.UserProfile, opt => opt.Ignore())
                     .ForMember(dest => dest.Notifications, opt => opt.Ignore())
@@ -62,7 +58,7 @@ namespace JobBoardApp.Application.Mappings
 
             // AppUser -> UserActivityDTO
             CreateMap<AppUser, UserActivityDTO>()
-                .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => _userManager.GetRolesAsync(src)));
+                .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => new List<string>()));
             #endregion
         }
     }

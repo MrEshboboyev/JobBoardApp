@@ -20,6 +20,7 @@ namespace JobBoardApp.Infrastructure.Configurations
             services.AddScoped<IJobListingService, JobListingService>();
             services.AddScoped<IJobApplicationService, JobApplicationService>();
             services.AddScoped<INotificationService, NotificationService>();
+            services.AddScoped<IUserService, UserService>();
 
             return services;
         }
