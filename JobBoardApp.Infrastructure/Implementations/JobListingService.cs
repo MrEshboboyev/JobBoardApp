@@ -143,9 +143,7 @@ namespace JobBoardApp.Infrastructure.Implementations
                     jl => jl.Id.Equals(jobListingId)
                     ) ?? throw new Exception("Job Listing not found!");
 
-                await _unitOfWork.JobListing.RemoveAsync(jobListingFromDb);
-                await _unitOfWork.SaveAsync();
-
+                // send notification to employer
                 NotificationDTO notificationDTO = new()
                 {
                     JobListingId = jobListingFromDb.Id,
@@ -154,7 +152,11 @@ namespace JobBoardApp.Infrastructure.Implementations
                     RecipientId = jobListingFromDb.EmployerId
                 };
 
-                await _notificationService.SendNotificationAsync(notificationDTO);
+                await _notificationService.CreateNotificationAsync(notificationDTO);
+
+                // After Notification is sent, remove job Listing
+                await _unitOfWork.JobListing.RemoveAsync(jobListingFromDb);
+                await _unitOfWork.SaveAsync();
 
                 return new ResponseDTO<bool>(true);
             }

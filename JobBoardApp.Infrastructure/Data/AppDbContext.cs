@@ -62,18 +62,19 @@ namespace JobBoardApp.Infrastructure.Data
                 .HasForeignKey(n => n.RecipientId)
                 .OnDelete(DeleteBehavior.Cascade);  // Cascade delete when AppUser (Recipient) is deleted
 
+            // NOTIFICATION ENTITY - JobListing relationship
             modelBuilder.Entity<Notification>()
                 .HasOne(n => n.JobListing)
                 .WithMany()
                 .HasForeignKey(n => n.JobListingId)
-                .OnDelete(DeleteBehavior.Cascade);  // Cascade delete when JobListing is deleted
+                .OnDelete(DeleteBehavior.SetNull);  // Set JobListingId to NULL if JobListing is deleted
 
+            // NOTIFICATION ENTITY - JobApplication relationship
             modelBuilder.Entity<Notification>()
                 .HasOne(n => n.JobApplication)
                 .WithMany()
                 .HasForeignKey(n => n.JobApplicationId)
-                .OnDelete(DeleteBehavior.Cascade);  // Cascade delete when JobApplication is deleted
-
+                .OnDelete(DeleteBehavior.SetNull);  // Set JobApplicationId to NULL if JobApplication is deleted
 
             // Timestamps using CURRENT_TIMESTAMP
             modelBuilder.Entity<AppUser>()
