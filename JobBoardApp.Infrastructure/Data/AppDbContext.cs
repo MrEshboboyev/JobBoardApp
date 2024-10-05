@@ -59,17 +59,20 @@ namespace JobBoardApp.Infrastructure.Data
             modelBuilder.Entity<Notification>()
                 .HasOne(n => n.Recipient)
                 .WithMany(u => u.Notifications)  // One AppUser can have many Notifications
-                .HasForeignKey(n => n.RecipientId);
+                .HasForeignKey(n => n.RecipientId)
+                .OnDelete(DeleteBehavior.Cascade);  // Cascade delete when AppUser (Recipient) is deleted
 
             modelBuilder.Entity<Notification>()
                 .HasOne(n => n.JobListing)
                 .WithMany()
-                .HasForeignKey(n => n.JobListingId);
+                .HasForeignKey(n => n.JobListingId)
+                .OnDelete(DeleteBehavior.Cascade);  // Cascade delete when JobListing is deleted
 
             modelBuilder.Entity<Notification>()
                 .HasOne(n => n.JobApplication)
                 .WithMany()
-                .HasForeignKey(n => n.JobApplicationId);
+                .HasForeignKey(n => n.JobApplicationId)
+                .OnDelete(DeleteBehavior.Cascade);  // Cascade delete when JobApplication is deleted
 
 
             // Timestamps using CURRENT_TIMESTAMP

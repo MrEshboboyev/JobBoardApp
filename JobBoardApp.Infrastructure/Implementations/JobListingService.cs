@@ -6,10 +6,12 @@ using JobBoardApp.Domain.Entities;
 
 namespace JobBoardApp.Infrastructure.Implementations
 {
-    public class JobListingService(IUnitOfWork unitOfWork, IMapper mapper) : IJobListingService
+    public class JobListingService(IUnitOfWork unitOfWork, IMapper mapper, 
+        INotificationService notificationService) : IJobListingService
     {
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly IMapper _mapper = mapper;
+        private readonly INotificationService _notificationService = notificationService;
 
         public async Task<ResponseDTO<IEnumerable<JobListingDTO>>> GetAllJobListingsAsync()
         {
@@ -143,6 +145,16 @@ namespace JobBoardApp.Infrastructure.Implementations
 
                 await _unitOfWork.JobListing.RemoveAsync(jobListingFromDb);
                 await _unitOfWork.SaveAsync();
+
+                NotificationDTO notificationDTO = new()
+                {
+                    JobListingId = jobListingFromDb.Id,
+                    JobListingTitle = jobListingFromDb.Title,
+                    Message = $"Your {jobListingFromDb.Title} listing removed by Admin. Reason : Security",
+                    RecipientId = jobListingFromDb.EmployerId
+                };
+
+                await _notificationService.SendNotificationAsync(notificationDTO);
 
                 return new ResponseDTO<bool>(true);
             }
