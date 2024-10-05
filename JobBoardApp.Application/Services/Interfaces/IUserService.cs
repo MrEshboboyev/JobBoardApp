@@ -8,8 +8,8 @@ namespace JobBoardApp.Application.Services.Interfaces
         Task<ResponseDTO<IEnumerable<UserDTO>>> GetAllUsersAsync();
         Task<ResponseDTO<UserDTO>> GetUserByIdAsync(string userId);
         Task<ResponseDTO<bool>> UpdateUserAsync(UserDTO userDto);
-        Task<ResponseDTO<bool>> ActivateUserAsync(string userId);
-        Task<ResponseDTO<bool>> DeactivateUserAsync(string userId);
+        Task<ResponseDTO<bool>> ActivateUserAsync(string userName);
+        Task<ResponseDTO<bool>> DeactivateUserAsync(string userName);
         Task<ResponseDTO<bool>> SuspendUserAsync(string userId, string reason, DateTime? endDate);
         Task<ResponseDTO<bool>> DeleteUserAsync(string userId);
         Task<ResponseDTO<bool>> ResetUserPasswordAsync(string userId, string newPassword);

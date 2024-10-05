@@ -83,12 +83,12 @@ namespace JobBoardApp.Infrastructure.Implementations
             }
         }
 
-        public async Task<ResponseDTO<bool>> ActivateUserAsync(string userId)
+        public async Task<ResponseDTO<bool>> ActivateUserAsync(string userName)
         {
             try
             {
                 var userFromDb = await _unitOfWork.User.GetAsync(
-                    u => u.Id.Equals(userId)
+                    u => u.UserName.Equals(userName)
                     ) ?? throw new Exception("User not found!");
 
                 // update activate field
@@ -105,12 +105,12 @@ namespace JobBoardApp.Infrastructure.Implementations
             }
         }
 
-        public async Task<ResponseDTO<bool>> DeactivateUserAsync(string userId)
+        public async Task<ResponseDTO<bool>> DeactivateUserAsync(string userName)
         {
             try
             {
                 var userFromDb = await _unitOfWork.User.GetAsync(
-                    u => u.Id.Equals(userId)
+                    u => u.UserName.Equals(userName)
                     ) ?? throw new Exception("User not found!");
 
                 // update activate field

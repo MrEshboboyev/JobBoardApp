@@ -7,8 +7,7 @@ namespace JobBoardApp.UI.Areas.Architect.Controllers
 {
     [Area(SD.Role_Architect)]
     [Authorize(Roles = SD.Role_Architect)]
-    [Route("api/[controller]")]
-    [ApiController]
+    [Route("Architect/[controller]")]
     public class AppUserController(IUserService userService) : Controller
     {
         private readonly IUserService _userService = userService;
