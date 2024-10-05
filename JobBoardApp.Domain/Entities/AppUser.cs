@@ -1,11 +1,4 @@
-﻿using JobBoardApp.Domain.Enums;
-using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace JobBoardApp.Domain.Entities
 {
@@ -13,6 +6,16 @@ namespace JobBoardApp.Domain.Entities
     {
         // No additional fields required for now, IdentityUser already includes Username, Email, etc.
         public DateTime DateRegistered { get; set; }
+
+        // Nullable field to track the last login date
+        public DateTime? LastLoginDate { get; set; }
+
+        // Field to indicate if the account is active or deactivated
+        public bool IsActive { get; set; } = true;
+
+        // Suspension information (reason for suspension, suspension end date)
+        public string SuspensionReason { get; set; }
+        public DateTime? SuspensionEndDate { get; set; }
 
         // Navigation property to UserProfile
         public UserProfile UserProfile { get; set; }

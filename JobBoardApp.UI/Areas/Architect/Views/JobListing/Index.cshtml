@@ -12,7 +12,7 @@
                     <th>Location</th>
                     <th>Salary</th>
                     <th>Job Type</th>
-                    <th>Status</th> <!-- New Column for IsActive -->
+                    <th>Status</th> 
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -41,7 +41,7 @@
                             <button type="button" class="btn btn-outline-info btn-sm"
                                     onclick="openJobDetails('@job.Title', '@job.EmployerName',
                                     '@job.Description', '@job.Location', '@job.SalaryRange.ToString("C")',
-                                    '@job.JobType')">
+                                    '@job.JobType', '@job.IsActive')">
                                 <i class="bi bi-info-circle"></i> Details
                             </button>
                             <form asp-action="Delete" method="post" class="d-inline">
@@ -75,7 +75,7 @@
             });
         });
 
-        function openJobDetails(title, employer, description, location, salary, jobType) {
+        function openJobDetails(title, employer, description, location, salary, jobType, isActive) {
             Swal.fire({
                 title: `<strong>${title}</strong>`,
                 icon: 'info',
@@ -85,6 +85,7 @@
                             <p><strong>Location:</strong> ${location}</p>
                             <p><strong>Salary:</strong> ${salary}</p>
                             <p><strong>Job Type:</strong> ${jobType}</p>
+                            <p><strong>Is Active:</strong> ${isActive}</p>
                         `,
                 showCloseButton: true,
                 focusConfirm: false,

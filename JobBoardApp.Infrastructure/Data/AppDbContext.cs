@@ -81,6 +81,16 @@ namespace JobBoardApp.Infrastructure.Data
                 .Property(u => u.DateRegistered)
                 .HasColumnType("timestamp")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
+            
+            modelBuilder.Entity<AppUser>()
+                .Property(u => u.LastLoginDate)
+                .HasColumnType("timestamp")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            modelBuilder.Entity<AppUser>()
+                .Property(u => u.SuspensionEndDate)
+                .HasColumnType("timestamp")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
             modelBuilder.Entity<JobListing>()
                 .Property(jl => jl.PostedDate)

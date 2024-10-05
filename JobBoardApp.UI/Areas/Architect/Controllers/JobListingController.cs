@@ -17,23 +17,8 @@ namespace JobBoardApp.UI.Areas.Architect.Controllers
             return View(allJobListings);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> Details(Guid jobListingId)
-        {
-            var jobListing = (await _jobListingService.GetJobListingAsync(jobListingId)).Data;
-            return View(jobListing);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Delete(Guid jobListingId)
-        {
-            var jobListing = (await _jobListingService.GetJobListingAsync(jobListingId)).Data;
-            return View(jobListing);
-        }
-
         [HttpPost]
-        [ActionName("Delete")]
-        public async Task<IActionResult> DeletePOST(Guid jobListingId)
+        public async Task<IActionResult> Delete(Guid jobListingId)
         {
             var result = await _jobListingService.DeleteJobListingAsyncByAdmin(jobListingId);
             
