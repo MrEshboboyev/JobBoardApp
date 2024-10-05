@@ -10,5 +10,8 @@ namespace JobBoardApp.Application.Services.Interfaces
         Task<ResponseDTO<bool>> CreateJobListingAsync(JobListingDTO jobListingDTO);
         Task<ResponseDTO<bool>> UpdateJobListingAsync(JobListingDTO jobListingDTO);
         Task<ResponseDTO<bool>> DeleteJobListingAsync(JobListingDTO jobListingDTO);
+
+        // For Admin methods
+        Task<ResponseDTO<bool>> DeleteJobListingAsyncByAdmin(Guid jobListingId);
     }
 }

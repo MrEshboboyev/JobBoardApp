@@ -60,6 +60,11 @@ app.MapAreaControllerRoute(
     pattern: "Employer/{controller=JobListing}/{action=Index}");
 
 app.MapAreaControllerRoute(
+    name: "MyAreaArchitect",
+    areaName: "Architect",
+    pattern: "Architect/{controller=JobListing}/{action=Index}");
+
+app.MapAreaControllerRoute(
     name: "MyAreaJobSeeker",
     areaName: "JobSeeker",
     pattern: "JobSeeker/{controller=JobApplication}/{action=Index}");

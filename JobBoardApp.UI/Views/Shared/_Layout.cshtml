@@ -10,7 +10,10 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
-
+    <!-- DataTables CSS & JS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <!-- Include the new external custom.css file -->
     <link rel="stylesheet" href="~/css/custom.css" asp-append-version="true" />
 </head>
@@ -31,6 +34,12 @@
         @if (User.IsInRole("JobSeeker"))
         {
             <a asp-area="JobSeeker" asp-controller="JobApplication" asp-action="Index"><i class="bi bi-card-checklist"></i> My Job Applications</a>
+        }
+
+        @if (User.IsInRole("Architect"))
+        {
+            <a asp-area="Architect" asp-controller="JobListing" asp-action="Index"><i class="bi bi-file-earmark-text"></i> All Job Listings</a>
+            <a asp-area="Architect" asp-controller="JobApplication" asp-action="ManageApplications"><i class="bi bi-folder-check"></i> Manage Applications</a>
         }
     </div>
 
@@ -84,5 +93,8 @@
 
     <!-- Include jQuery for AJAX -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 </html>

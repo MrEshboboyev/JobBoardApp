@@ -129,5 +129,27 @@ namespace JobBoardApp.Infrastructure.Implementations
                 return new ResponseDTO<bool>(ex.Message);
             }
         }
+
+
+        // Admin Methods
+        public async Task<ResponseDTO<bool>> DeleteJobListingAsyncByAdmin(Guid jobListingId)
+        {
+            try
+            {
+                // getting job listing
+                var jobListingFromDb = await _unitOfWork.JobListing.GetAsync(
+                    jl => jl.Id.Equals(jobListingId)
+                    ) ?? throw new Exception("Job Listing not found!");
+
+                await _unitOfWork.JobListing.RemoveAsync(jobListingFromDb);
+                await _unitOfWork.SaveAsync();
+
+                return new ResponseDTO<bool>(true);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO<bool>(ex.Message);
+            }
+        }
     }
 }

@@ -21,6 +21,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Folder Include="Areas\Architect\Data\" />
+	  <Folder Include="Areas\Architect\Models\" />
 	  <Folder Include="Areas\Employer\Data\" />
 	  <Folder Include="Areas\Employer\Models\" />
 	  <Folder Include="Areas\JobSeeker\Data\" />
