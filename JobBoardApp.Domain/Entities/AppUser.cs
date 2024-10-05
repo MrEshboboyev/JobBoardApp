@@ -14,7 +14,7 @@ namespace JobBoardApp.Domain.Entities
         public bool IsActive { get; set; } = true;
 
         // Suspension information (reason for suspension, suspension end date)
-        public string SuspensionReason { get; set; }
+        public string? SuspensionReason { get; set; }
         public DateTime? SuspensionEndDate { get; set; }
 
         // Navigation property to UserProfile
