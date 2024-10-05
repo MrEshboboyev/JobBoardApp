@@ -151,6 +151,29 @@ namespace JobBoardApp.Infrastructure.Implementations
             }
         }
 
+        public async Task<ResponseDTO<bool>> UnsuspendUserAsync(string userName)
+        {
+            try
+            {
+                var userFromDb = await _unitOfWork.User.GetAsync(u => u.UserName.Equals(userName))
+                    ?? throw new Exception("User not found!");
+
+                // Clear suspension fields
+                userFromDb.SuspensionReason = null;
+                userFromDb.SuspensionEndDate = null;
+
+                await _unitOfWork.User.UpdateAsync(userFromDb);
+                await _unitOfWork.SaveAsync();
+
+                return new ResponseDTO<bool>(true);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO<bool>(ex.Message);
+            }
+        }
+
+
         public async Task<ResponseDTO<bool>> DeleteUserAsync(string userId)
         {
             try
@@ -221,15 +244,15 @@ namespace JobBoardApp.Infrastructure.Implementations
             }
         }
 
-        public async Task<ResponseDTO<bool>> UnlockUserAsync(string userId)
+        public async Task<ResponseDTO<bool>> UnlockUserAsync(string userName)
         {
             try
             {
                 var userFromDb = await _unitOfWork.User.GetAsync(
-                    u => u.Id.Equals(userId)
+                    u => u.UserName.Equals(userName)
                     ) ?? throw new Exception("User not found!");
 
-                if (userFromDb.LockoutEnd is not null || userFromDb.LockoutEnd <= DateTime.Now)
+                if (userFromDb.LockoutEnd is null || userFromDb.LockoutEnd <= DateTime.Now)
                     throw new Exception("User is not locked out!");
 
                 var result = await _userManager.SetLockoutEndDateAsync(userFromDb, null);

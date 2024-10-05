@@ -47,6 +47,16 @@ namespace JobBoardApp.UI.Areas.Architect.Controllers
             return BadRequest(new { success = false, message = "User suspension failed." });
         }
 
+        [HttpPost("Unsuspend")]
+        public async Task<IActionResult> UnsuspendUser([FromBody] string userName)
+        {
+            var result = (await _userService.UnsuspendUserAsync(userName)).Data;
+            if (result)
+                return Ok(new { success = true, message = "User unsuspended successfully." });
+            return BadRequest(new { success = false, message = "User unsuspension failed." });
+        }
+
+
         [HttpPost("Unlock/{userName}")]
         public async Task<IActionResult> UnlockUser(string userName)
         {
