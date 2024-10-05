@@ -72,7 +72,12 @@
                         <td>@user.DateRegistered.ToShortDateString()</td>
                         <td>
                             <button class="btn btn-outline-info btn-sm"
-                                    onclick="viewUserDetails('@user.UserName')">
+                                    onclick="openUserDetails( '@user.UserName',
+                                    '@string.Join(", ", user.Roles)',
+                                    '@user.IsActive',
+                                    '@user.LastLoginDate',
+                                    '@user.Email',
+                                    '@user.DateRegistered')">
                                 Details
                             </button>
 
@@ -100,7 +105,18 @@
 
 @section Scripts {
     <script>
-        initializeDataTable('#usersTable', 6);
+        initializeDataTable('#usersTable', 7);
+        function openUserDetails(userName, roles, isActive, lastLoginDate, email, dateRegistered) {
+            const details = {
+                "Username": userName,
+                "Roles": roles,
+                "Is Active": isActive,
+                "Last Login Date": lastLoginDate,
+                "Date Registered": dateRegistered,
+                "Email": email,
+            };
+            openDetails(userName, details);
+        }
     </script>
     <script src="~/js/userManagement.js"></script>
 }
