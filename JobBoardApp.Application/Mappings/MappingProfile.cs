@@ -1,13 +1,18 @@
 ﻿using AutoMapper;
 using JobBoardApp.Application.DTOs;
 using JobBoardApp.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace JobBoardApp.Application.Mappings
 {
     public class MappingProfile : Profile
     {
-        public MappingProfile()
+        private readonly UserManager<AppUser> _userManager;
+
+        public MappingProfile(UserManager<AppUser> userManager)
         {
+            _userManager = userManager;
+
             #region UserProfile
             CreateMap<UserProfile, UserProfileDTO>()
                 .ForMember(dest => dest.OwnerName, opt => opt.MapFrom(src => src.User.UserName))
@@ -42,6 +47,17 @@ namespace JobBoardApp.Application.Mappings
                     .ForMember(dest => dest.JobApplication, opt => opt.Ignore())
                     .ForMember(dest => dest.JobListing, opt => opt.Ignore())
                     .ForMember(dest => dest.Recipient, opt => opt.Ignore());
+            #endregion
+
+            #region AppUser
+
+            // AppUser -> UserDTO
+            CreateMap<AppUser, UserDTO>()
+                .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => _userManager.GetRolesAsync(src)));
+
+            // AppUser -> UserActivityDTO
+            CreateMap<AppUser, UserActivityDTO>()
+                .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => _userManager.GetRolesAsync(src)));
             #endregion
         }
     }
