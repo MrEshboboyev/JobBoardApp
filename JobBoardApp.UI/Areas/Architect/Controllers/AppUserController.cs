@@ -1,4 +1,5 @@
 ﻿using JobBoardApp.Application.Common.Utility;
+using JobBoardApp.Application.Requests;
 using JobBoardApp.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -40,8 +41,7 @@ namespace JobBoardApp.UI.Areas.Architect.Controllers
         [HttpPost("Suspend")]
         public async Task<IActionResult> SuspendUser([FromBody] SuspendUserRequest request)
         {
-            var result = (await _userService.SuspendUserAsync(request.UserId, 
-                request.Reason, DateTime.Now)).Data;
+            var result = (await _userService.SuspendUserAsync(request)).Data;
             if (result)
                 return Ok(new { success = true, message = "User suspended successfully." });
             return BadRequest(new { success = false, message = "User suspension failed." });
@@ -83,24 +83,5 @@ namespace JobBoardApp.UI.Areas.Architect.Controllers
                 return Ok(new { success = true, message = "User deleted successfully." });
             return BadRequest(new { success = false, message = "User deletion failed." });
         }
-    }
-
-    // Request DTOs for various operations
-    public class SuspendUserRequest
-    {
-        public string UserId { get; set; }
-        public string Reason { get; set; }
-    }
-
-    public class ResetPasswordRequest
-    {
-        public string UserName { get; set; }
-        public string NewPassword { get; set; }
-    }
-
-    public class AssignRoleRequest
-    {
-        public string UserName { get; set; }
-        public string Role { get; set; }
     }
 }

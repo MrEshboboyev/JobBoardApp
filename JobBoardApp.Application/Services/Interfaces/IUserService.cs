@@ -1,4 +1,5 @@
 ﻿using JobBoardApp.Application.DTOs;
+using JobBoardApp.Application.Requests;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace JobBoardApp.Application.Services.Interfaces
@@ -10,7 +11,7 @@ namespace JobBoardApp.Application.Services.Interfaces
         Task<ResponseDTO<bool>> UpdateUserAsync(UserDTO userDto);
         Task<ResponseDTO<bool>> ActivateUserAsync(string userName);
         Task<ResponseDTO<bool>> DeactivateUserAsync(string userName);
-        Task<ResponseDTO<bool>> SuspendUserAsync(string userId, string reason, DateTime? endDate);
+        Task<ResponseDTO<bool>> SuspendUserAsync(SuspendUserRequest suspendUserRequest);
         Task<ResponseDTO<bool>> DeleteUserAsync(string userId);
         Task<ResponseDTO<bool>> ResetUserPasswordAsync(string userId, string newPassword);
         Task<ResponseDTO<bool>> AssignRoleAsync(string userId, string role);

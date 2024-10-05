@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using JobBoardApp.Application.Common.Interfaces;
 using JobBoardApp.Application.DTOs;
+using JobBoardApp.Application.Requests;
 using JobBoardApp.Application.Services.Interfaces;
 using JobBoardApp.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -127,17 +128,17 @@ namespace JobBoardApp.Infrastructure.Implementations
             }
         }
 
-        public async Task<ResponseDTO<bool>> SuspendUserAsync(string userId, string reason, DateTime? endDate)
+        public async Task<ResponseDTO<bool>> SuspendUserAsync(SuspendUserRequest suspendUserRequest)
         {
             try
             {
                 var userFromDb = await _unitOfWork.User.GetAsync(
-                    u => u.Id.Equals(userId)
+                    u => u.UserName.Equals(suspendUserRequest.UserName)
                     ) ?? throw new Exception("User not found!");
 
                 // update suspension fields
-                userFromDb.SuspensionReason = reason;
-                userFromDb.SuspensionEndDate = endDate;
+                userFromDb.SuspensionReason = suspendUserRequest.Reason;
+                userFromDb.SuspensionEndDate = suspendUserRequest.EndDate;
 
                 await _unitOfWork.User.UpdateAsync(userFromDb);
                 await _unitOfWork.SaveAsync();

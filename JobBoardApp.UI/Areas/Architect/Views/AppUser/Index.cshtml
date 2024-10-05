@@ -151,25 +151,45 @@
             });
         }
 
-        function suspendUser(userName) {
+            function suspendUser(userName) {
             Swal.fire({
                 title: 'Suspend User',
-                input: 'textarea',
-                inputLabel: 'Reason for Suspension',
-                inputPlaceholder: 'Enter reason for suspension',
+                html: `
+                    <label for="reason">Reason for Suspension</label>
+                    <textarea id="reason" class="swal2-textarea" placeholder="Enter reason for suspension"></textarea>
+                    <label for="endDate" class="mt-3">Suspension End Date (optional)</label>
+                    <input type="date" id="endDate" class="swal2-input">
+                `,
                 showCancelButton: true,
                 confirmButtonText: 'Suspend',
                 showLoaderOnConfirm: true,
-                preConfirm: (reason) => {
-                    return $.post(`/Architect/AppUser/Suspend`, { userName, reason });
+                preConfirm: () => {
+                    const reason = document.getElementById('reason').value;
+                    const endDate = document.getElementById('endDate').value || null;  // Capture endDate (null if not provided)
+
+                    if (!reason) {
+                        Swal.showValidationMessage('Reason for suspension is required');
+                        return;
+                    }
+
+                    return $.ajax({
+                        url: '/Architect/AppUser/Suspend',
+                        type: 'POST',
+                        contentType: 'application/json',  // Set content type to application/json
+                        data: JSON.stringify({ userName: userName, reason: reason, endDate: endDate }),  // Send userName, reason, and endDate
+                        success: function(response) {
+                            Swal.fire('Suspended!', `${userName} has been suspended.`, 'success').then(() => location.reload());
+                        },
+                        error: function(xhr) {
+                            Swal.fire('Error', 'Suspension failed: ' + xhr.responseText, 'error');
+                        }
+                    });
                 },
                 allowOutsideClick: () => !Swal.isLoading()
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire('Suspended!', `${userName} has been suspended.`, 'success').then(() => location.reload());
-                }
             });
         }
+
+
 
         function unlockUser(userName) {
             Swal.fire({
