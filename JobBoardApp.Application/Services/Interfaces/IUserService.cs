@@ -13,7 +13,7 @@ namespace JobBoardApp.Application.Services.Interfaces
         Task<ResponseDTO<bool>> DeactivateUserAsync(string userName);
         Task<ResponseDTO<bool>> SuspendUserAsync(SuspendUserRequest suspendUserRequest);
         Task<ResponseDTO<bool>> UnsuspendUserAsync(string userName);
-        Task<ResponseDTO<bool>> DeleteUserAsync(string userId);
+        Task<ResponseDTO<bool>> DeleteUserAsync(string userName);
         Task<ResponseDTO<bool>> ResetUserPasswordAsync(ResetPasswordRequest request);
         Task<ResponseDTO<bool>> AssignRoleAsync(AssignRoleRequest request);
         Task<ResponseDTO<bool>> RemoveRoleAsync(RemoveRoleRequest request);

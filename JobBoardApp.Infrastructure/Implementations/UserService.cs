@@ -174,12 +174,12 @@ namespace JobBoardApp.Infrastructure.Implementations
         }
 
 
-        public async Task<ResponseDTO<bool>> DeleteUserAsync(string userId)
+        public async Task<ResponseDTO<bool>> DeleteUserAsync(string userName)
         {
             try
             {
                 var userFromDb = await _unitOfWork.User.GetAsync(
-                    u => u.Id.Equals(userId)
+                    u => u.UserName.Equals(userName)
                     ) ?? throw new Exception("User not found!");
 
                 await _unitOfWork.User.RemoveAsync(userFromDb);

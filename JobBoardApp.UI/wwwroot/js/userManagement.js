@@ -162,7 +162,6 @@ function removeRole(role, userName) {
     });
 }
 
-
 function confirmDeleteUser(userName) {
     Swal.fire({
         title: 'Delete User?',
