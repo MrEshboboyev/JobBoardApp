@@ -44,9 +44,13 @@
                         <td>
                             <!-- SweetAlert2 Modal Trigger for Details -->
                             <button type="button" class="btn btn-outline-info btn-sm"
-                                    onclick="openJobDetails('@job.Title', '@job.EmployerName',
-                                    '@job.Description', '@job.Location', '@job.SalaryRange.ToString("C")',
-                                    '@job.JobType', '@job.IsActive')">
+                                    onclick="openJobDetails('@job.Title', 
+                                    '@job.EmployerName',
+                                    '@job.Description', 
+                                    '@job.Location', 
+                                    '@job.SalaryRange.ToString("C")',
+                                    '@job.JobType', 
+                                    '@job.IsActive')">
                                 <i class="bi bi-info-circle"></i> Details
                             </button>
                             <form asp-action="Delete" method="post" class="d-inline">
@@ -68,15 +72,17 @@
         initializeDataTable('#jobListingsTable', 6); // Pass table ID and non-sortable column index
     </script>
     <script>
-        function openJobDetails(userName, email, dateRegistered, lastLoginDate, isActive) {
+        function openJobDetails(title, employerName, description, location, salaryRange, jobType, isActive) {
             const details = {
-                "Username": userName,
-                "Email": email,
-                "Date Registered": dateRegistered,
-                "Last Login Date": lastLoginDate,
+                "Title": title,
+                "Employer Name": employerName,
+                "Description": description,
+                "Location": location,
+                "Salary Range": salaryRange,
+                "JobType": jobType,
                 "Is Active": isActive
             };
-            openDetails(userName, details); // Use the reusable function
+            openDetails(title, details); // Use the reusable function
         }
     </script>
 }

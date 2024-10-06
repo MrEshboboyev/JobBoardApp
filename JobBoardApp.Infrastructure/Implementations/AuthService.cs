@@ -72,25 +72,12 @@ namespace JobBoardApp.Infrastructure.Implementations
         {
             try
             {
-                var result = await _signInManager.PasswordSignInAsync(
-                    loginModel.UserName,
-                    loginModel.Password,
-                    isPersistent: false,
-                    lockoutOnFailure: true // Enabling lockout on failure
-                );
-
-                if (result.IsLockedOut)
-                    return new ResponseDTO<string>("Your account is locked due to multiple unsuccessful login attempts. Please try again later.");
-
-                if (!result.Succeeded)
-                    return new ResponseDTO<string>("Invalid username or password!");
-
                 // Fetching user from the database
                 var userFromDb = await _userManager.FindByNameAsync(loginModel.UserName)
                     ?? throw new Exception("User not found!");
 
                 if (!userFromDb.IsActive)
-                    return new ResponseDTO<string>("Your account is deactivated. Please contact support.");
+                    throw new Exception("Your account is deactivated. Please contact support.");
 
                 // Check if the account is suspended
                 if (userFromDb.IsSuspended)
@@ -100,6 +87,19 @@ namespace JobBoardApp.Infrastructure.Implementations
                         : "indefinitely";
                     throw new Exception($"Account is suspended until {suspensionEnd}. Reason: {userFromDb.SuspensionReason}");
                 }
+
+                var result = await _signInManager.PasswordSignInAsync(
+                    loginModel.UserName,
+                    loginModel.Password,
+                    isPersistent: false,
+                    lockoutOnFailure: true // Enabling lockout on failure
+                );
+
+                if (result.IsLockedOut)
+                    throw new Exception("Your account is locked due to multiple unsuccessful login attempts. Please try again later.");
+
+                if (!result.Succeeded)
+                    throw new Exception("Invalid username or password!");
 
                 // Update last login date
                 userFromDb.LastLoginDate = DateTime.Now;

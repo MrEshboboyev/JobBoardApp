@@ -1,0 +1,93 @@
+﻿@model IEnumerable<JobApplicationDTO>
+
+@{
+    ViewData["Title"] = "Job Applications";
+}
+
+<div class="container py-5">
+    <h2 class="text-center mb-5">Job Applications</h2>
+
+    <div class="table-responsive">
+        <table id="jobApplicationsTable" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th>Job Title</th>
+                    <th>Job Seeker Name</th>
+                    <th>Employer Name</th>
+                    <th>Application Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var application in Model)
+                {
+                    <tr>
+                        <!-- Job Title -->
+                        <td>@application.JobListing.Title</td>
+
+                        <!-- Job Seeker Name -->
+                        <td>
+                            <a asp-controller="AppUser" asp-action="Activity" asp-route-userName="@application.JobSeekerName">
+                                @application.JobSeekerName
+                            </a>
+                        </td>
+                        
+                        <!-- Employer Name -->
+                        <td>
+                            <a asp-controller="AppUser" asp-action="Activity" asp-route-userName="@application.JobListing.EmployerName">
+                                @application.JobListing.EmployerName
+                            </a>
+                        </td>
+
+                        <!-- Application Date -->
+                        <td>@application.ApplicationDate.ToString("MMMM dd, yyyy")</td>
+
+                        <!-- Application Status -->
+                        <td>
+                            <span class="badge
+                                                @(application.Status == ApplicationStatus.Accepted ? "bg-success" :
+                                                  application.Status == ApplicationStatus.Rejected ? "bg-danger" :
+                                                  application.Status == ApplicationStatus.Pending ? "bg-primary" :
+                                                  "bg-warning text-dark")">
+                                @application.Status.ToString()
+                            </span>
+                        </td>
+
+                        <!-- Action Buttons -->
+                        <td>
+                            <button type="button" class="btn btn-info btn-sm" 
+                            onclick="showApplicationDetails('@application.JobListing.Title', 
+                            '@application.JobSeekerName', 
+                            '@application.JobListing.EmployerName', 
+                            '@application.CoverLetter', 
+                            '@application.ResumePath', 
+                            '@application.Status')">
+                                <i class="bi bi-eye"></i> View Details
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        initializeDataTable('#jobApplicationsTable', 5);
+
+        // Function to show job application details in a SweetAlert modal
+        function showApplicationDetails(jobTitle, jobSeekerName, employerName, coverLetter, resumePath, status) {
+            const details = {
+                "Job Title": jobTitle,
+                "Job Seeker Name": jobSeekerName,
+                "Employer Name": employerName,
+                "Cover Letter": coverLetter,
+                "Resume": `<a href="${resumePath}" target="_blank">View Resume</a>`,
+                "Status": status,
+            };
+            openDetails(jobTitle, details);
+        }
+    </script>
+}

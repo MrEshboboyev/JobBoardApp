@@ -38,8 +38,17 @@
 
         @if (User.IsInRole("Architect"))
         {
-            <a asp-area="Architect" asp-controller="JobListing" asp-action="Index"><i class="bi bi-file-earmark-text"></i> All Job Listings</a>
-            <a asp-area="Architect" asp-controller="AppUser" asp-action="Index"><i class="bi bi-people-fill"></i> All Users</a>
+            <a asp-area="Architect" asp-controller="AppUser" asp-action="Index">
+                <i class="bi bi-people-fill"></i> All Users
+            </a>
+
+            <a asp-area="Architect" asp-controller="JobListing" asp-action="Index">
+                <i class="bi bi-file-earmark-text"></i> All Job Listings
+            </a>
+
+            <a asp-area="Architect" asp-controller="JobApplication" asp-action="Index">
+                <i class="bi bi-file-earmark-person"></i> All Job Applications
+            </a>
         }
     </div>
 

@@ -13,7 +13,25 @@ namespace JobBoardApp.Infrastructure.Implementations
         private readonly IUnitOfWork _unitOfWork = unitOfWork;
         private readonly IMapper _mapper = mapper;
         private readonly INotificationService _notificationService = notificationService;
-        
+
+        public async Task<ResponseDTO<IEnumerable<JobApplicationDTO>>> GetAllApplicationsAsync()
+        {
+            try
+            {
+                var allApplications = await _unitOfWork.JobApplication.GetAllAsync(
+                    includeProperties: "JobSeeker,JobListing.Employer"
+                    );
+
+                var mappedJobApplications = _mapper.Map<IEnumerable<JobApplicationDTO>>(allApplications);
+
+                return new ResponseDTO<IEnumerable<JobApplicationDTO>>(mappedJobApplications);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO<IEnumerable<JobApplicationDTO>>(ex.Message);
+            }
+        }
+
         public async Task<ResponseDTO<IEnumerable<JobApplicationDTO>>> GetJobSeekerApplicationsAsync(string jobSeekerId)
         {
             try
