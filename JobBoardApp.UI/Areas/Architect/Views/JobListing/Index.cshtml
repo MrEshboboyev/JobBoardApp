@@ -20,7 +20,12 @@
                 @foreach (var job in Model)
                 {
                     <tr>
-                        <td>@job.EmployerName</td>
+                        <td>
+                            <a asp-controller="AppUser" asp-action="Activity" 
+                                      asp-route-userName="@job.EmployerName">
+                                @job.EmployerName
+                            </a>
+                        </td>
                         <td>@job.Title</td>
                         <td>@job.Location</td>
                         <td>@job.SalaryRange.ToString("C")</td>

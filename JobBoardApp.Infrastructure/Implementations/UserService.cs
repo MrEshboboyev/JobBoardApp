@@ -305,7 +305,7 @@ namespace JobBoardApp.Infrastructure.Implementations
             {
                 var userFromDb = await _unitOfWork.User.GetAsync(
                     filter: u => u.UserName.Equals(userName),
-                    includeProperties: "JobApplications,JobListings"
+                    includeProperties: "JobApplications.JobListing.Employer,JobListings"
                     ) ?? throw new Exception("User not found!");
 
                 var mappedUser = _mapper.Map<UserActivityDTO>(userFromDb);
