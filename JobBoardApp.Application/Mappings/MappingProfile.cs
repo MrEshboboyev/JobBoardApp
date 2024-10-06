@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using JobBoardApp.Application.DTOs;
 using JobBoardApp.Domain.Entities;
-using Microsoft.AspNetCore.Identity;
 
 namespace JobBoardApp.Application.Mappings
 {

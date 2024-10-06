@@ -46,7 +46,6 @@
                                 </span>
                             }
                         </td>
-
                         <td>
                             @if (user.IsActive)
                             {
@@ -67,6 +66,11 @@
                             @if (user.IsSuspended)
                             {
                                 <button class="btn btn-outline-warning btn-sm" onclick="unsuspendUser('@user.UserName')">Unsuspend</button>
+                                <!-- Display a button with suspension icon and suspension details pop-up -->
+                                <button class="btn btn-outline-warning btn-sm"
+                                        onclick="showSuspensionDetails('@user.UserName', '@user.SuspensionReason', '@user.SuspensionEndDate')">
+                                    <i class="bi bi-exclamation-triangle-fill text-warning"></i>
+                                </button>
                             }
                             else
                             {
@@ -120,6 +124,15 @@
                 "Last Login Date": lastLoginDate,
                 "Date Registered": dateRegistered,
                 "Email": email,
+            };
+            openDetails(userName, details);
+        }
+        
+        function showSuspensionDetails(userName, suspensionReason, suspensionEndDate) {
+            const details = {
+                "Username": userName,
+                "Suspension Reason": suspensionReason,
+                "Suspension End Date": suspensionEndDate
             };
             openDetails(userName, details);
         }
