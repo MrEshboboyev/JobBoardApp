@@ -1,0 +1,164 @@
+﻿@model UserActivityDTO
+
+<div class="container py-5">
+    <h2 class="text-center mb-4">User Activity: @Model.UserName</h2>
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h4>User Info</h4>
+            <p><strong>Email:</strong> @Model.Email</p>
+            <p><strong>Roles:</strong> @string.Join(", ", Model.Roles)</p>
+            <p><strong>Last Login Date:</strong> @(Model.LastLoginDate.HasValue ? Model.LastLoginDate.Value.ToString("dd MMM yyyy") : "Never Logged In")</p>
+            <p>
+                <strong>Status:</strong>
+                @if (Model.IsActive)
+                {
+                    <span class="badge bg-success">Active</span>
+                }
+                else
+                {
+                    <span class="badge bg-danger">Inactive</span>
+                }
+            </p>
+        </div>
+    </div>
+
+    <!-- Job Listings Table -->
+    @if (Model.Roles.Contains("Employer") && Model.JobListings.Count() > 0)
+    {
+    <div class="mb-5">
+        <h4 class="mb-3">Job Listings Posted (For Employers)</h4>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover" id="jobListingsTable">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Location</th>
+                        <th>Salary Range</th>
+                        <th>Posted Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var jobListing in Model.JobListings)
+                    {
+                        <tr>
+                            <td>@jobListing.Title</td>
+                            <td>@jobListing.Description</td>
+                            <td>@jobListing.Location</td>
+                            <td>@jobListing.SalaryRange.ToString("C")</td>
+                            <td>@jobListing.PostedDate.ToString("dd MMM yyyy")</td>
+                            <td>
+                                <button class="btn btn-outline-info btn-sm"
+                                        onclick="viewJobListingDetails('@jobListing.Title', '@jobListing.Description', '@jobListing.Location', '@jobListing.SalaryRange', '@jobListing.PostedDate')">
+                                    <i class="bi bi-info-circle"></i> Details
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    }
+
+    <!-- Job Applications Table -->
+    @if (Model.Roles.Contains("JobSeeker") && Model.JobApplications.Count() > 0)
+    {
+        <div>
+            <h4 class="mb-3">Job Applications Submitted (For Job Seekers)</h4>
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" id="jobApplicationsTable">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Job Title</th>
+                            <th>Resume</th>
+                            <th>Cover Letter</th>
+                            <th>Application Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var application in Model.JobApplications)
+                        {
+                            <tr>
+                                <td>@application.JobListing.Title</td>
+                                <td><a href="@application.ResumePath" target="_blank">View Resume</a></td>
+                                <td>@application.CoverLetter</td>
+                                <td>@application.ApplicationDate.ToString("dd MMM yyyy")</td>
+                                <td>
+                                    <span class="badge
+                                                @(application.Status == ApplicationStatus.Accepted ? "bg-success" :
+                                                  application.Status == ApplicationStatus.Rejected ? "bg-danger" :
+                                                  application.Status == ApplicationStatus.Pending ? "bg-primary" :
+                                                  "bg-warning text-dark")">
+                                        @application.Status.ToString()
+                                    </span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-outline-info btn-sm"
+                                            onclick="viewApplicationDetails('@application.JobListing.Title',
+                                '@application.ResumePath',
+                                '@application.CoverLetter',
+                                '@application.ApplicationDate',
+                                '@application.Status')">
+                                        <i class="bi bi-info-circle"></i> Details
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Initialize DataTables for both tables
+            $('#jobListingsTable').DataTable({
+                paging: true,
+                searching: true,
+                order: [[4, 'desc']] // Order by Posted Date
+            });
+
+            $('#jobApplicationsTable').DataTable({
+                paging: true,
+                searching: true,
+                order: [[3, 'desc']] // Order by Application Date
+            });
+        });
+
+        // SweetAlert for Job Listing Details
+        function viewJobListingDetails(title, description, location, salaryRange, postedDate) {
+            Swal.fire({
+                title: title,
+                html: `
+                    <strong>Description:</strong> ${description}<br>
+                    <strong>Location:</strong> ${location}<br>
+                    <strong>Salary Range:</strong> ${salaryRange}<br>
+                    <strong>Posted Date:</strong> ${new Date(postedDate).toLocaleDateString()}`,
+                icon: 'info',
+                confirmButtonText: 'Close'
+            });
+        }
+
+        // SweetAlert for Job Application Details
+        function viewApplicationDetails(title, resumePath, coverLetter, applicationDate, status) {
+            Swal.fire({
+                title: title,
+                html: `
+                    <strong>Resume:</strong> <a href="${resumePath}" target="_blank">View Resume</a><br>
+                    <strong>Cover Letter:</strong> ${coverLetter}<br>
+                    <strong>Application Date:</strong> ${new Date(applicationDate).toLocaleDateString()}<br>
+                    <strong>Status:</strong> ${status}`,
+                icon: 'info',
+                confirmButtonText: 'Close'
+            });
+        }
+    </script>
+}

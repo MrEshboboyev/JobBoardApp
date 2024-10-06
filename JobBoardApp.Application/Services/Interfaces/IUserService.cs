@@ -18,7 +18,7 @@ namespace JobBoardApp.Application.Services.Interfaces
         Task<ResponseDTO<bool>> AssignRoleAsync(AssignRoleRequest request);
         Task<ResponseDTO<bool>> RemoveRoleAsync(RemoveRoleRequest request);
         Task<ResponseDTO<bool>> UnlockUserAsync(string userId);
-        Task<ResponseDTO<UserActivityDTO>> GetUserActivityAsync(string userId);
+        Task<ResponseDTO<UserActivityDTO>> GetUserActivityAsync(string userName);
         Task<ResponseDTO<IEnumerable<string>>> ViewUserRolesAsync(string userId);
     }
 }

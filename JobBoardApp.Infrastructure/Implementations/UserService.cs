@@ -299,16 +299,18 @@ namespace JobBoardApp.Infrastructure.Implementations
             }
         }
 
-        public async Task<ResponseDTO<UserActivityDTO>> GetUserActivityAsync(string userId)
+        public async Task<ResponseDTO<UserActivityDTO>> GetUserActivityAsync(string userName)
         {
             try
             {
                 var userFromDb = await _unitOfWork.User.GetAsync(
-                    filter: u => u.Id.Equals(userId),
+                    filter: u => u.UserName.Equals(userName),
                     includeProperties: "JobApplications,JobListings"
                     ) ?? throw new Exception("User not found!");
 
                 var mappedUser = _mapper.Map<UserActivityDTO>(userFromDb);
+                var roles = await _userManager.GetRolesAsync(userFromDb);
+                mappedUser.Roles = roles; // Assign roles after mapping
 
                 return new ResponseDTO<UserActivityDTO>(mappedUser);
             }

@@ -34,7 +34,11 @@
                 @foreach (var user in Model)
                 {
                     <tr>
-                        <td>@user.UserName</td>
+                        <td>
+                            <a asp-action="Activity" asp-route-userName="@user.UserName">
+                                @user.UserName
+                            </a>
+                        </td>
                         <td>
                             @foreach (var role in user.Roles)
                             {

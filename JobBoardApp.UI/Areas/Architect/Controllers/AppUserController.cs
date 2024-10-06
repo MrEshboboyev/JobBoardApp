@@ -20,6 +20,13 @@ namespace JobBoardApp.UI.Areas.Architect.Controllers
             return View(allUsers);
         }
 
+        [HttpGet("Activity/{userName}")]
+        public async Task<IActionResult> Activity(string userName)
+        {
+            var activity = (await _userService.GetUserActivityAsync(userName)).Data;
+            return View(activity);
+        }
+
         [HttpPost("Activate/{userName}")]
         public async Task<IActionResult> ActivateUser(string userName)
         {
@@ -55,7 +62,6 @@ namespace JobBoardApp.UI.Areas.Architect.Controllers
                 return Ok(new { success = true, message = "User unsuspended successfully." });
             return BadRequest(new { success = false, message = "User unsuspension failed." });
         }
-
 
         [HttpPost("Unlock/{userName}")]
         public async Task<IActionResult> UnlockUser(string userName)
