@@ -6,8 +6,6 @@ namespace JobBoardApp.UI.Areas.JobSeeker.ViewModels
 {
     public class JobApplicationVM
     {
-        public Guid JobListingId { get; set; }
-        public string JobSeekerId { get; set; }
         [Required]
         public string ResumePath { get; set; }
         [Required]

@@ -50,7 +50,7 @@ namespace JobBoardApp.UI.Areas.JobSeeker.Controllers
             JobApplicationDTO jobApplicationDTO = new()
             {
                 JobSeekerId = GetUserId(),
-                JobListingId = jobApplicationVM.JobListingId,
+                JobListingId = jobApplicationVM.JobListing.Id,
                 ResumePath = jobApplicationVM.ResumePath,
                 CoverLetter = jobApplicationVM.CoverLetter
             };
@@ -64,7 +64,7 @@ namespace JobBoardApp.UI.Areas.JobSeeker.Controllers
             }
 
             TempData["error"] = $"Failed to Job Application create process. Error : {result.Message}";
-            return View(jobApplicationDTO);
+            return View(jobApplicationVM.JobListing.Id);
         }
 
         [HttpGet]
