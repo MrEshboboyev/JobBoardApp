@@ -60,7 +60,7 @@ function suspendUser(userName) {
     });
 }
 
-function unlockUser(userName) {
+function unsuspendUser(userName) {
     Swal.fire({
         title: 'Unsuspend User',
         text: `Are you sure you want to unsuspend ${userName}?`,
@@ -85,7 +85,6 @@ function unlockUser(userName) {
         allowOutsideClick: () => !Swal.isLoading()
     });
 }
-
 
 function resetPassword(userName) {
     Swal.fire({
@@ -136,6 +135,33 @@ function assignRole(userName) {
         allowOutsideClick: () => !Swal.isLoading()
     });
 }
+
+function removeRole(role, userName) {
+    Swal.fire({
+        title: `Remove "${role} from this ${userName}"?`,
+        text: "Are you sure you want to remove this role?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, remove it!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: '/Architect/AppUser/RemoveRole', // Your API endpoint for removing the role
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ userName: userName, role: role }),
+                success: function (response) {
+                    Swal.fire('Removed!', `The role "${role}" has been removed.`, 'success').then(() => location.reload());
+                },
+                error: function (xhr) {
+                    Swal.fire('Error', 'Failed to remove the role: ' + xhr.responseText, 'error');
+                }
+            });
+        }
+    });
+}
+
 
 function confirmDeleteUser(userName) {
     Swal.fire({

@@ -84,6 +84,16 @@ namespace JobBoardApp.UI.Areas.Architect.Controllers
             return BadRequest(new { success = false, message = result.Message });
         }
 
+        [HttpPost("RemoveRole")]
+        public async Task<IActionResult> RemoveRole([FromBody] RemoveRoleRequest request)
+        {
+            var result = await _userService.RemoveRoleAsync(request);
+            if (result.Data)
+                return Ok(new { success = true, message = "Role removed successfully." });
+            return BadRequest(new { success = false, message = result.Message });
+        }
+
+
         [HttpPost("Delete/{userName}")]
         public async Task<IActionResult> DeleteUser(string userName)
         {

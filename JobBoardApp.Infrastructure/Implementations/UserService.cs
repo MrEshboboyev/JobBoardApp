@@ -229,10 +229,36 @@ namespace JobBoardApp.Infrastructure.Implementations
                     u => u.UserName.Equals(request.UserName), tracked: true
                     ) ?? throw new Exception("User not found!");
 
-                if (await _roleManager.RoleExistsAsync(request.Role))
+                if (!(await _roleManager.RoleExistsAsync(request.Role)))
                     throw new Exception("Role not found!");
 
                 var result = await _userManager.AddToRoleAsync(userFromDb, request.Role);
+                if (!result.Succeeded)
+                    throw new Exception(result.Errors.First().Description);
+
+                await _unitOfWork.User.UpdateAsync(userFromDb);
+                await _unitOfWork.SaveAsync();
+
+                return new ResponseDTO<bool>(true);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO<bool>(ex.Message);
+            }
+        }
+
+        public async Task<ResponseDTO<bool>> RemoveRoleAsync(RemoveRoleRequest request)
+        {
+            try
+            {
+                var userFromDb = await _unitOfWork.User.GetAsync(
+                    u => u.UserName.Equals(request.UserName), tracked: true
+                    ) ?? throw new Exception("User not found!");
+
+                if (!(await _roleManager.RoleExistsAsync(request.Role)))
+                    throw new Exception("Role not found!");
+
+                var result = await _userManager.RemoveFromRoleAsync(userFromDb, request.Role);
                 if (!result.Succeeded)
                     throw new Exception(result.Errors.First().Description);
 

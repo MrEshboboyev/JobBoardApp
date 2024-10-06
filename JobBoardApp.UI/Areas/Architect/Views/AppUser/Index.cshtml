@@ -38,9 +38,15 @@
                         <td>
                             @foreach (var role in user.Roles)
                             {
-                                <span class="@GetRoleBadgeClass(role)">@role</span>
+                                <span class="@GetRoleBadgeClass(role)">
+                                    @role
+                                    <button class="btn btn-sm btn-danger" onclick="removeRole('@role', '@user.UserName')">
+                                        X
+                                    </button>
+                                </span>
                             }
                         </td>
+
                         <td>
                             @if (user.IsActive)
                             {
@@ -60,7 +66,7 @@
                         <td>
                             @if (user.IsSuspended)
                             {
-                                <button class="btn btn-outline-warning btn-sm" onclick="unlockUser('@user.UserName')">Unsuspend</button>
+                                <button class="btn btn-outline-warning btn-sm" onclick="unsuspendUser('@user.UserName')">Unsuspend</button>
                             }
                             else
                             {
