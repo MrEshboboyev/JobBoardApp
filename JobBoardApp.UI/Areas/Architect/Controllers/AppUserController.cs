@@ -69,11 +69,10 @@ namespace JobBoardApp.UI.Areas.Architect.Controllers
         [HttpPost("ResetPassword")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
         {
-            var result = (await _userService.ResetUserPasswordAsync(request.UserName, 
-                request.NewPassword)).Data;
-            if (result)
+            var result = await _userService.ResetUserPasswordAsync(request);
+            if (result.Data)
                 return Ok(new { success = true, message = "Password reset successfully." });
-            return BadRequest(new { success = false, message = "Password reset failed." });
+            return BadRequest(new { success = false, message = result.Message });
         }
 
         [HttpPost("AssignRole")]

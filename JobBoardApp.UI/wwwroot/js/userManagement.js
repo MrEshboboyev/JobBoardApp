@@ -95,13 +95,20 @@ function resetPassword(userName) {
         showCancelButton: true,
         confirmButtonText: 'Reset',
         preConfirm: (newPassword) => {
-            return $.post(`/Architect/AppUser/ResetPassword`, { userName, newPassword });
+            return $.ajax({
+                url: '/Architect/AppUser/ResetPassword',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ userName: userName, newPassword: newPassword }),
+                success: function (response) {
+                    Swal.fire('Password Reset!', `${userName}'s password has been reset.`, 'success').then(() => location.reload());
+                },
+                error: function (xhr) {
+                    Swal.fire('Error', 'Reset password failed: ' + xhr.responseText, 'error');
+                }
+            });
         },
         allowOutsideClick: () => !Swal.isLoading()
-    }).then((result) => {
-        if (result.isConfirmed) {
-            Swal.fire('Password Reset!', `${userName}'s password has been reset.`, 'success').then(() => location.reload());
-        }
     });
 }
 

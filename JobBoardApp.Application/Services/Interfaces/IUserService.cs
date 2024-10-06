@@ -14,7 +14,7 @@ namespace JobBoardApp.Application.Services.Interfaces
         Task<ResponseDTO<bool>> SuspendUserAsync(SuspendUserRequest suspendUserRequest);
         Task<ResponseDTO<bool>> UnsuspendUserAsync(string userName);
         Task<ResponseDTO<bool>> DeleteUserAsync(string userId);
-        Task<ResponseDTO<bool>> ResetUserPasswordAsync(string userId, string newPassword);
+        Task<ResponseDTO<bool>> ResetUserPasswordAsync(ResetPasswordRequest request);
         Task<ResponseDTO<bool>> AssignRoleAsync(AssignRoleRequest request);
         Task<ResponseDTO<bool>> UnlockUserAsync(string userId);
         Task<ResponseDTO<UserActivityDTO>> GetUserActivityAsync(string userId);

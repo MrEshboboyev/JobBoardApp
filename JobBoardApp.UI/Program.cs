@@ -41,6 +41,24 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.AccessDeniedPath = "/Auth/AccessDenied";
     });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigins",
+        builder =>
+        {
+            builder.WithOrigins(
+                "https://cdn.jsdelivr.net",
+                "https://code.jquery.com",
+                "https://cdn.datatables.net",
+                "https://cdnjs.cloudflare.com"
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials(); // If you're using cookies or authentication
+        });
+});
+
+
 
 var app = builder.Build();
 
@@ -54,6 +72,9 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.UseCors("AllowSpecificOrigins");
+
 
 app.UseRouting();
 

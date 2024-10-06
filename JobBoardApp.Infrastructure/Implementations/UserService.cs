@@ -193,18 +193,18 @@ namespace JobBoardApp.Infrastructure.Implementations
             }
         }
 
-        public async Task<ResponseDTO<bool>> ResetUserPasswordAsync(string userId, string newPassword)
+        public async Task<ResponseDTO<bool>> ResetUserPasswordAsync(ResetPasswordRequest request)
         {
             try
             {
                 var userFromDb = await _unitOfWork.User.GetAsync(
-                    u => u.Id.Equals(userId)
+                    u => u.UserName.Equals(request.UserName), tracked: true
                     ) ?? throw new Exception("User not found!");
 
                 // Generate reset token
                 var resetToken = await _userManager.GeneratePasswordResetTokenAsync(userFromDb);
 
-                var result = await _userManager.ResetPasswordAsync(userFromDb, resetToken, newPassword);
+                var result = await _userManager.ResetPasswordAsync(userFromDb, resetToken, request.NewPassword);
                 
                 if (!result.Succeeded)
                 {
