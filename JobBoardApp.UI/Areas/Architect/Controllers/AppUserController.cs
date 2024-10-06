@@ -79,10 +79,10 @@ namespace JobBoardApp.UI.Areas.Architect.Controllers
         [HttpPost("AssignRole")]
         public async Task<IActionResult> AssignRole([FromBody] AssignRoleRequest request)
         {
-            var result = (await _userService.AssignRoleAsync(request.UserName, request.Role)).Data;
-            if (result)
+            var result = await _userService.AssignRoleAsync(request);
+            if (result.Data)
                 return Ok(new { success = true, message = "Role assigned successfully." });
-            return BadRequest(new { success = false, message = "Role assignment failed." });
+            return BadRequest(new { success = false, message = result.Message });
         }
 
         [HttpPost("Delete/{userName}")]

@@ -113,13 +113,20 @@ function assignRole(userName) {
         showCancelButton: true,
         confirmButtonText: 'Assign',
         preConfirm: (role) => {
-            return $.post(`/Architect/AppUser/AssignRole`, { userName, role });
+            return $.ajax({
+                url: '/Architect/AppUser/AssignRole',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ userName: userName, role: role }),
+                success: function (response) {
+                    Swal.fire('Role assigned!', `${userName} has been assigned the role.`, 'success').then(() => location.reload());
+                },
+                error: function (xhr) {
+                    Swal.fire('Error', 'Assigning role failed: ' + xhr.responseText, 'error');
+                }
+            });
         },
         allowOutsideClick: () => !Swal.isLoading()
-    }).then((result) => {
-        if (result.isConfirmed) {
-            Swal.fire('Role Assigned!', `${userName} has been assigned the role.`, 'success').then(() => location.reload());
-        }
     });
 }
 

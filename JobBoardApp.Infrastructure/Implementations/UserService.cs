@@ -221,15 +221,18 @@ namespace JobBoardApp.Infrastructure.Implementations
             }
         }
 
-        public async Task<ResponseDTO<bool>> AssignRoleAsync(string userId, string role)
+        public async Task<ResponseDTO<bool>> AssignRoleAsync(AssignRoleRequest request)
         {
             try
             {
                 var userFromDb = await _unitOfWork.User.GetAsync(
-                    u => u.Id.Equals(userId)
+                    u => u.UserName.Equals(request.UserName), tracked: true
                     ) ?? throw new Exception("User not found!");
 
-                var result = await _userManager.AddToRoleAsync(userFromDb, role);
+                if (await _roleManager.RoleExistsAsync(request.Role))
+                    throw new Exception("Role not found!");
+
+                var result = await _userManager.AddToRoleAsync(userFromDb, request.Role);
                 if (!result.Succeeded)
                     throw new Exception(result.Errors.First().Description);
 
