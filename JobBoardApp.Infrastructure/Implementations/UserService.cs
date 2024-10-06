@@ -41,7 +41,6 @@ namespace JobBoardApp.Infrastructure.Implementations
             }
         }
 
-
         public async Task<ResponseDTO<UserDTO>> GetUserByIdAsync(string userId)
         {
             try
@@ -172,7 +171,6 @@ namespace JobBoardApp.Infrastructure.Implementations
                 return new ResponseDTO<bool>(ex.Message);
             }
         }
-
 
         public async Task<ResponseDTO<bool>> DeleteUserAsync(string userName)
         {

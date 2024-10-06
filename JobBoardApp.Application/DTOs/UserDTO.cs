@@ -25,5 +25,5 @@ public class UserDTO
         }
     }
 
-    public DateTime? LockoutEnd { get; set; }
+    public DateTimeOffset? LockoutEnd { get; set; }
 }

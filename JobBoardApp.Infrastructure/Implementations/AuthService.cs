@@ -72,26 +72,50 @@ namespace JobBoardApp.Infrastructure.Implementations
         {
             try
             {
-                var result = await _signInManager.PasswordSignInAsync(loginModel.UserName,
-                    loginModel.Password, false, false);
+                var result = await _signInManager.PasswordSignInAsync(
+                    loginModel.UserName,
+                    loginModel.Password,
+                    isPersistent: false,
+                    lockoutOnFailure: true // Enabling lockout on failure
+                );
+
+                if (result.IsLockedOut)
+                    return new ResponseDTO<string>("Your account is locked due to multiple unsuccessful login attempts. Please try again later.");
 
                 if (!result.Succeeded)
-                    return new ResponseDTO<string>("Email/Password is incorrect!");
+                    return new ResponseDTO<string>("Invalid username or password!");
 
-                // getting this user and user roles
+                // Fetching user from the database
                 var userFromDb = await _userManager.FindByNameAsync(loginModel.UserName)
-                    ?? throw new Exception("User not found in our system!");
+                    ?? throw new Exception("User not found!");
 
+                if (!userFromDb.IsActive)
+                    return new ResponseDTO<string>("Your account is deactivated. Please contact support.");
+
+                // Check if the account is suspended
+                if (userFromDb.IsSuspended)
+                {
+                    var suspensionEnd = userFromDb.SuspensionEndDate.HasValue
+                        ? userFromDb.SuspensionEndDate.Value.ToString("f")
+                        : "indefinitely";
+                    throw new Exception($"Account is suspended until {suspensionEnd}. Reason: {userFromDb.SuspensionReason}");
+                }
+
+                // Update last login date
+                userFromDb.LastLoginDate = DateTime.Now;
+                await _userManager.UpdateAsync(userFromDb);
+
+                // Fetch user roles
                 var userRoles = await _userManager.GetRolesAsync(userFromDb);
 
-                // create and return token
+                // Generate JWT token
                 var generatedToken = await GenerateJwtToken(userFromDb, userRoles);
 
-                return new ResponseDTO<string>(generatedToken.Data, "Login successfully!");
+                return new ResponseDTO<string>(generatedToken.Data, "Login successful!");
             }
             catch (Exception ex)
             {
-                return new ResponseDTO<string>(ex.Message);
+                return new ResponseDTO<string>($"Login failed: {ex.Message}");
             }
         }
 

@@ -49,7 +49,7 @@ namespace JobBoardApp.Application.Mappings
 
             // AppUser -> UserDTO
             CreateMap<AppUser, UserDTO>()
-                .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => new List<string>()))
+                .ForMember(dest => dest.Roles, opt => opt.Ignore())
                 .ReverseMap()
                     .ForMember(dest => dest.UserProfile, opt => opt.Ignore())
                     .ForMember(dest => dest.Notifications, opt => opt.Ignore())
@@ -58,7 +58,7 @@ namespace JobBoardApp.Application.Mappings
 
             // AppUser -> UserActivityDTO
             CreateMap<AppUser, UserActivityDTO>()
-                .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => new List<string>()));
+                .ForMember(dest => dest.Roles, opt => opt.Ignore());
             #endregion
         }
     }
