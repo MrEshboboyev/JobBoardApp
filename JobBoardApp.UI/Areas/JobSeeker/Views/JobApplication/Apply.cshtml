@@ -34,9 +34,11 @@
                     @if (Model.HasSubmittedApplication)
                     {
                         <h3 class="card-title text-danger">You have already applied for this job.</h3>
-                        <p class="text-muted">You cannot reapply until after @Model.ReapplyAfterDate?.ToString("MMMM dd, yyyy").</p>
+                        <p class="text-muted">You cannot reapply until after @Model.ReapplyAfterDate?.ToString("MMMM dd, yyyy").
+                            @* <a asp-action="Details" asp-route-jobApplicationId="@Model."></a> *@
+                        </p>
                         <div class="d-grid gap-2">
-                            <a href="@Url.Action("Index", "JobListings", new { area = "JobSeeker" })" class="btn btn-secondary">
+                            <a asp-area="" asp-controller="Home" asp-action="Index" class="btn btn-secondary">
                                 <i class="bi bi-arrow-left-circle"></i> Back to Listings
                             </a>
                         </div>

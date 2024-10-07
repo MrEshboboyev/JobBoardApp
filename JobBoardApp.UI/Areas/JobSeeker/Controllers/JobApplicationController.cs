@@ -32,22 +32,24 @@ namespace JobBoardApp.UI.Areas.JobSeeker.Controllers
         public async Task<IActionResult> Apply(Guid jobListingId)
         {
             var jobListing = (await _jobListingService.GetJobListingAsync(jobListingId)).Data;
-            var jobSeekerUserProfile = (await _userProfileService.GetProfileAsync(GetUserId())).Data;
+            var jobSeekerProfile = (await _userProfileService.GetProfileAsync(GetUserId())).Data;
 
-            // Check if the JobSeeker has previously submitted an application for this job
-            var previousApplication = (await _jobApplicationService.GetApplicationAsync(jobListingId)).Data;
-            bool hasSubmittedApplication = previousApplication != null && previousApplication.IsApplyRestricted;
+            // Use the service to check if there is a pending or rejected application
+            bool hasSubmittedApplication = (await _jobApplicationService.HasPendingOrRejectedApplication(jobListingId, GetUserId())).Data;
+
+            var previousApplication = (await _jobApplicationService.GetPreviousApplication(jobListingId, GetUserId())).Data;
 
             JobApplicationVM jobApplicationVM = new()
             {
                 JobListing = jobListing,
-                ResumePath = jobSeekerUserProfile.ResumePath,
+                ResumePath = jobSeekerProfile.ResumePath,
                 HasSubmittedApplication = hasSubmittedApplication,
-                ReapplyAfterDate = previousApplication?.ReapplyAfter ?? DateTime.MinValue
+                ReapplyAfterDate = previousApplication?.ReapplyAfter
             };
 
             return View(jobApplicationVM);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> Apply(JobApplicationVM jobApplicationVM)
