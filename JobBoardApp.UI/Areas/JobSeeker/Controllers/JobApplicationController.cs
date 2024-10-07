@@ -32,13 +32,18 @@ namespace JobBoardApp.UI.Areas.JobSeeker.Controllers
         public async Task<IActionResult> Apply(Guid jobListingId)
         {
             var jobListing = (await _jobListingService.GetJobListingAsync(jobListingId)).Data;
-
             var jobSeekerUserProfile = (await _userProfileService.GetProfileAsync(GetUserId())).Data;
+
+            // Check if the JobSeeker has previously submitted an application for this job
+            var previousApplication = (await _jobApplicationService.GetApplicationAsync(jobListingId)).Data;
+            bool hasSubmittedApplication = previousApplication != null && previousApplication.IsApplyRestricted;
 
             JobApplicationVM jobApplicationVM = new()
             {
                 JobListing = jobListing,
-                ResumePath = jobSeekerUserProfile.ResumePath
+                ResumePath = jobSeekerUserProfile.ResumePath,
+                HasSubmittedApplication = hasSubmittedApplication,
+                ReapplyAfterDate = previousApplication?.ReapplyAfter ?? DateTime.MinValue
             };
 
             return View(jobApplicationVM);

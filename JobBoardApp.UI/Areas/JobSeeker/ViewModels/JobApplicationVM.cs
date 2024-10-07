@@ -14,5 +14,9 @@ namespace JobBoardApp.UI.Areas.JobSeeker.ViewModels
         public ApplicationStatus Status { get; set; }
 
         public JobListingDTO JobListing { get; set; }
+
+        // New properties for reapply restriction
+        public bool HasSubmittedApplication { get; set; }
+        public DateTime? ReapplyAfterDate { get; set; }
     }
 }
