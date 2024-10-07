@@ -1,10 +1,5 @@
 ﻿using JobBoardApp.Domain.Enums;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace JobBoardApp.Domain.Entities
 {
@@ -20,6 +15,11 @@ namespace JobBoardApp.Domain.Entities
         public DateTime ApplicationDate { get; set; }
         [Required]
         public ApplicationStatus Status { get; set; }
+
+        // New fields for reapplication restriction
+        public DateTime? ReapplyAfter { get; set; }
+        public bool IsApplyRestricted =>
+            ReapplyAfter.HasValue && ReapplyAfter > DateTime.Now;
 
         // Navigation properties
         public JobListing JobListing { get; set; }

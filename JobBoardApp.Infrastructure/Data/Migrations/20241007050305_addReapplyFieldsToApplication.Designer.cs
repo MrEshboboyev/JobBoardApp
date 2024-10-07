@@ -3,6 +3,7 @@ using System;
 using JobBoardApp.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace JobBoardApp.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241007050305_addReapplyFieldsToApplication")]
+    partial class addReapplyFieldsToApplication
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -130,9 +133,7 @@ namespace JobBoardApp.Infrastructure.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("ReapplyAfter")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("ResumePath")
                         .IsRequired()

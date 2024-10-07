@@ -102,6 +102,11 @@ namespace JobBoardApp.Infrastructure.Data
                 .HasColumnType("timestamp")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
+            modelBuilder.Entity<JobApplication>()
+                .Property(ja => ja.ReapplyAfter)
+                .HasColumnType("timestamp")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
             modelBuilder.Entity<Notification>()
                 .Property(ja => ja.CreatedAt)
                 .HasColumnType("timestamp")
