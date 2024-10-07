@@ -15,10 +15,9 @@ namespace JobBoardApp.Application.Common.Models
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-        [Required]
-        [DataType(DataType.Password)]
-        [Compare(nameof(Password), ErrorMessage = "Password and confirm password must be match.")]
-        public string ConfirmPassword { get; set; }
+        //[DataType(DataType.Password)]
+        //[Compare(nameof(Password), ErrorMessage = "Password and confirm password must be match.")]
+        //public string ConfirmPassword { get; set; }
 
         [Required]
         public UserRole Role { get; set; }

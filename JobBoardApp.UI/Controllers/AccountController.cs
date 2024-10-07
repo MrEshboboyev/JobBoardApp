@@ -14,12 +14,14 @@ namespace JobBoardApp.UI.Controllers
     public class AccountController(IAuthService authService,
         ITokenProvider tokenProvider,
         SignInManager<AppUser> signInManager,
-        IWebHostEnvironment webHostEnvironment) : Controller
+        IWebHostEnvironment webHostEnvironment,
+        IFileService fileService) : Controller
     {
         private readonly IAuthService _authService = authService;
         private readonly ITokenProvider _tokenProvider = tokenProvider;
         private readonly SignInManager<AppUser> _signInManager = signInManager;
         private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
+        private readonly IFileService _fileService = fileService;
 
         [HttpGet]
         public async Task<IActionResult> Register()
@@ -35,28 +37,14 @@ namespace JobBoardApp.UI.Controllers
 
 
         #region Checking uniqueness methods (Email,UserName)
-        [HttpGet]
-        public async Task<IActionResult> CheckEmail(string email)
-        {
-            var emailExist = await _authService.EmailExist(email);
-            if (emailExist.Data)
-            {
-                return Json(new { exists = true });
-            }
-
-            return Json(new { exists = false });
-        }
 
         [HttpGet]
-        public async Task<IActionResult> CheckUsername(string username)
+        public async Task<IActionResult> CheckUsernameEmail(string username, string email)
         {
-            var usernameExist = await _authService.UserNameExist(username);
-            if (usernameExist.Data)
-            {
-                return Json(new { exists = true });
-            }
+            bool isUsernameTaken = (await _authService.UserNameExist(username)).Data;
+            bool isEmailTaken = (await _authService.EmailExist(username)).Data;
 
-            return Json(new { exists = false });
+            return Json(new { isUsernameTaken, isEmailTaken });
         }
         #endregion
 
@@ -70,22 +58,10 @@ namespace JobBoardApp.UI.Controllers
                 return View(model);
             }
 
-            // Check if a new resume has been uploaded
+            // Use FileService for resume upload
             if (model.Resume != null)
             {
-                var resumeFolder = Path.Combine(_webHostEnvironment.WebRootPath, "uploads/resumes");
-                var uniqueResumeFileName = Guid.NewGuid().ToString() + "_" + model.Resume.FileName;
-                var resumeFilePath = Path.Combine(resumeFolder, uniqueResumeFileName);
-
-                if (!Directory.Exists(resumeFolder))
-                    Directory.CreateDirectory(resumeFolder);
-
-                using (var resumeStream = new FileStream(resumeFilePath, FileMode.Create))
-                {
-                    await model.Resume.CopyToAsync(resumeStream);
-                }
-
-                model.ResumePath = "/uploads/resumes/" + uniqueResumeFileName;
+                model.ResumePath = await _fileService.UploadResumeAsync(model.Resume);
             }
 
             var result = await _authService.RegisterAsync(model);
@@ -99,6 +75,7 @@ namespace JobBoardApp.UI.Controllers
             TempData["error"] = result.Message;
             return View(model);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> Login(LoginModel loginModel)
