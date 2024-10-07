@@ -101,6 +101,6 @@ app.MapControllerRoute(
 
 app.MapHub<NotificationHub>("/notificationHub");
 
-app.SeedDatabase();
+await app.SeedDatabaseAsync();
 
 app.Run();

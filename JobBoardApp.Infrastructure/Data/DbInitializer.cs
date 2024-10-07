@@ -8,52 +8,69 @@ using JobBoardApp.Domain.Enums;
 namespace JobBoardApp.Infrastructure.Data
 {
     public class DbInitializer(UserManager<AppUser> userManager,
-        RoleManager<IdentityRole> roleManager,
+        RoleManager<IdentityRole> roleManager, 
         AppDbContext db) : IDbInitializer
     {
-        // inject Identity Managers
         private readonly UserManager<AppUser> _userManager = userManager;
         private readonly RoleManager<IdentityRole> _roleManager = roleManager;
         private readonly AppDbContext _db = db;
 
-        public void Initialize()
+        public async Task InitializeAsync()
         {
             try
             {
-                // migrate
-                if (_db.Database.GetPendingMigrations().Count() > 0)
+                // Migrate database changes
+                if (_db.Database.GetPendingMigrations().Any())
                 {
-                    _db.Database.Migrate();
+                    await _db.Database.MigrateAsync();
                 }
 
-                // If "Admin" role does not exist, create admin user and roles
-                if (!_roleManager.RoleExistsAsync(SD.Role_Architect).GetAwaiter().GetResult())
+                // Check if the "Admin" role exists, if not, create roles and the admin user
+                if (!await _roleManager.RoleExistsAsync(SD.Role_Architect))
                 {
-                    // creating roles
-                    _roleManager.CreateAsync(new IdentityRole(SD.Role_Architect)).Wait();
-                    _roleManager.CreateAsync(new IdentityRole(UserRole.Employer.ToString())).Wait();
-                    _roleManager.CreateAsync(new IdentityRole(UserRole.JobSeeker.ToString())).Wait();
+                    // Create roles
+                    await _roleManager.CreateAsync(new IdentityRole(SD.Role_Architect));
+                    await _roleManager.CreateAsync(new IdentityRole(UserRole.Employer.ToString()));
+                    await _roleManager.CreateAsync(new IdentityRole(UserRole.JobSeeker.ToString()));
 
-                    // create admin user
-                    _userManager.CreateAsync(new AppUser
+                    // Create admin user
+                    var adminForDb = new AppUser
                     {
                         UserName = "admin@example.com",
                         Email = "admin@example.com",
+                        DateRegistered = DateTime.Now,
+                        EmailConfirmed = true,
+                        IsActive = true,
                         NormalizedUserName = "ADMIN@EXAMPLE.COM",
-                        NormalizedEmail = "ADMIN@EXAMPLE.COM",
-                        PhoneNumber = "1112223333",
-                    }, "Admin*123").GetAwaiter().GetResult();
+                        NormalizedEmail = "ADMIN@EXAMPLE.COM"
+                    };
 
-                    // finding user and assign role
-                    var admin = _db.Users.FirstOrDefault(u => u.Email == "admin@example.com");
+                    await _userManager.CreateAsync(adminForDb, "Admin*123");
 
-                    _userManager.AddToRoleAsync(admin, SD.Role_Architect).GetAwaiter().GetResult();
+                    // Assign role to admin
+                    var admin = await _userManager.FindByEmailAsync("admin@example.com")
+                        ?? throw new Exception("Admin not found!");
+                    await _userManager.AddToRoleAsync(admin, SD.Role_Architect);
+
+                    // Create user profile for admin
+                    var userProfile = new UserProfile
+                    {
+                        Bio = "Admin",
+                        CompanyName = "JobBoardApp",
+                        UserId = adminForDb.Id,
+                        Website = "jobboardapp.com"
+                    };
+
+                    await _db.UserProfiles.AddAsync(userProfile);
+                    await _db.SaveChangesAsync();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                // Handle or log the exception
+                throw new Exception("Error initializing the database", ex);
             }
         }
     }
+
 }
