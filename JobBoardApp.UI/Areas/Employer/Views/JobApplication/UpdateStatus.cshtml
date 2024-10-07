@@ -8,6 +8,7 @@
                     <h2 class="card-title text-center">@Model.JobListing.Title</h2>
                     <h5 class="text-center text-muted">Application from @Model.JobSeekerName</h5>
 
+                    <!-- Application Details -->
                     <div class="mt-4">
                         <h6 class="font-weight-bold">Resume:</h6>
                         <a href="@Model.ResumePath" class="btn btn-info btn-sm" target="_blank">
@@ -45,15 +46,12 @@
                                 <button type="submit" class="btn btn-success btn-block">Accept</button>
                             </form>
 
-                            <!-- Reject Button Form -->
-                            <form method="post" asp-action="UpdateStatus" class="w-45">
-                                <input type="hidden" name="applicationId" value="@Model.Id" />
-                                <input type="hidden" name="status" value="Rejected" />
-                                <button type="submit" class="btn btn-danger btn-block">Reject</button>
-                            </form>
+                            <!-- Reject Button Trigger -->
+                            <button type="button" class="btn btn-danger btn-block w-45" onclick="rejectApplication('@Model.Id')">
+                                Reject
+                            </button>
                         </div>
                     }
-
 
                     <!-- Back to Manage Applications -->
                     <div class="mt-5 text-center">
@@ -65,18 +63,32 @@
     </div>
 </div>
 
-<!-- Optional: Additional Bootstrap 5 styling for consistent UI -->
-<style>
-    .card {
-        border: none;
-        border-radius: 15px;
-    }
-
-    .btn-block {
-        width: 100%;
-    }
-
-    .w-45 {
-        width: 45%;
-    }
-</style>
+<!-- JavaScript for Reapply Modal -->
+@section Scripts {
+        <script>
+        function rejectApplication(applicationId) {
+            Swal.fire({
+                title: 'Reject Application',
+                input: 'date',
+                inputLabel: 'Reapply Date',
+                showCancelButton: true,
+                confirmButtonText: 'Reject',
+                preConfirm: (reapplyDate) => {
+                    return $.ajax({
+                        url: '@Url.Action("RejectApplication", "JobApplication", new { area = "Employer" })',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({ applicationId: applicationId, reapplyDate: reapplyDate }),
+                        success: function(response) {
+                            Swal.fire('Rejected!', 'The application has been rejected.', 'success').then(() => location.reload());
+                        },
+                        error: function(xhr) {
+                            Swal.fire('Error', 'Rejecting application failed: ' + xhr.responseText, 'error');
+                        }
+                    });
+                },
+                allowOutsideClick: () => !Swal.isLoading()
+            });
+        }
+        </script>
+}

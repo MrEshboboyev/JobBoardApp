@@ -16,6 +16,11 @@ namespace JobBoardApp.Application.DTOs
         [Required]
         public ApplicationStatus Status { get; set; }
 
+        // New fields for reapplication restriction
+        public DateTime? ReapplyAfter { get; set; }
+        public bool IsApplyRestricted =>
+            ReapplyAfter.HasValue && ReapplyAfter > DateTime.Now;
+
         public JobListingDTO JobListing { get; set; }
         public string JobSeekerName { get; set; }
     }

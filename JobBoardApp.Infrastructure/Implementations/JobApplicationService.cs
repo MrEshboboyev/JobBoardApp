@@ -136,6 +136,9 @@ namespace JobBoardApp.Infrastructure.Implementations
 
                 jobApplicationFromDb.Status = jobApplicationDTO.Status;
 
+                // if application rejected
+                jobApplicationFromDb.ReapplyAfter = jobApplicationDTO.ReapplyAfter;
+
                 await _unitOfWork.JobApplication.UpdateAsync(jobApplicationFromDb);
                 await _unitOfWork.SaveAsync();
 
