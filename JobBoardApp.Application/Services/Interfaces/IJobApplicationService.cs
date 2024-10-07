@@ -11,5 +11,9 @@ namespace JobBoardApp.Application.Services.Interfaces
         Task<ResponseDTO<bool>> CreateJobApplicationAsync(JobApplicationDTO jobApplicationDTO);
         Task<ResponseDTO<bool>> UpdateJobApplicationAsync(JobApplicationDTO jobApplicationDTO);
         Task<ResponseDTO<bool>> DeleteJobApplicationAsync(JobApplicationDTO jobApplicationDTO);
+
+        // checking previous application
+        Task<ResponseDTO<JobApplicationDTO>> GetPreviousApplication(Guid jobListingId, string jobSeekerId);
+        Task<ResponseDTO<bool>> HasPendingOrRejectedApplication(Guid jobListingId, string jobSeekerId);
     }
 }

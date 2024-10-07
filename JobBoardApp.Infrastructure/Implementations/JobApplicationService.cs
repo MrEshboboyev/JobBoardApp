@@ -183,5 +183,41 @@ namespace JobBoardApp.Infrastructure.Implementations
                 return new ResponseDTO<bool>(ex.Message);
             }
         }
+    
+        public async Task<ResponseDTO<JobApplicationDTO>> GetPreviousApplication(Guid jobListingId, string jobSeekerId)
+        {
+            try
+            {
+                var application = await _unitOfWork.JobApplication.GetAsync(
+                    filter: ja => ja.JobListingId.Equals(jobListingId) && ja.JobSeekerId.Equals(jobSeekerId),
+                    includeProperties: "JobSeeker,JobListing.Employer"
+                    ) ?? throw new Exception("Job Application not found!");
+
+                var mappedApplication = _mapper.Map<JobApplicationDTO>(application);
+
+                return new ResponseDTO<JobApplicationDTO>(mappedApplication);
+            }
+            catch (Exception ex)
+            {
+                return new ResponseDTO<JobApplicationDTO>(ex.Message);
+            }
+        }
+
+        public async Task<ResponseDTO<bool>> HasPendingOrRejectedApplication(Guid jobListingId, string jobSeekerId)
+        {
+            try
+            {
+                var application = await _unitOfWork.JobApplication.GetAsync(
+                    ja => ja.JobListingId.Equals(jobListingId) && 
+                    ja.JobSeekerId.Equals(jobSeekerId)
+                    ) ?? throw new Exception("Job Application not found!");
+
+                return new ResponseDTO<bool>(application.IsApplyRestricted);
+            }
+            catch(Exception ex)
+            {
+                return new ResponseDTO<bool>(ex.Message);
+            }
+        }
     }
 }
